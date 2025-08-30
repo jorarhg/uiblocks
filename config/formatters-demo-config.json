@@ -1,0 +1,258 @@
+{
+  "formattersDemo": {
+    "columns": [
+      {
+        "key": "id",
+        "label": "ID de Tarea",
+        "formatter": {
+          "type": "custom",
+          "options": {
+            "template": "TASK-{value}",
+            "className": "font-mono text-sm bg-gray-100 px-2 py-1 rounded"
+          }
+        }
+      },
+      {
+        "key": "title",
+        "label": "Título",
+        "formatter": {
+          "type": "default",
+          "options": {
+            "className": "font-medium"
+          }
+        }
+      },
+      {
+        "key": "status",
+        "label": "Estado",
+        "formatter": {
+          "type": "badge",
+          "options": {
+            "variant": "outline",
+            "valueMap": {
+              "backlog": {
+                "label": "Pendiente",
+                "icon": "circle-dashed",
+                "className": "bg-gray-50 text-gray-700 border-gray-200"
+              },
+              "todo": {
+                "label": "Por Hacer",
+                "icon": "circle",
+                "className": "bg-blue-50 text-blue-700 border-blue-200"
+              },
+              "in-progress": {
+                "label": "En Progreso",
+                "icon": "clock",
+                "className": "bg-yellow-50 text-yellow-700 border-yellow-200"
+              },
+              "done": {
+                "label": "Completado",
+                "icon": "check-circle",
+                "className": "bg-green-50 text-green-700 border-green-200"
+              },
+              "canceled": {
+                "label": "Cancelado",
+                "icon": "x-circle",
+                "className": "bg-red-50 text-red-700 border-red-200"
+              }
+            }
+          }
+        }
+      },
+      {
+        "key": "priority",
+        "label": "Prioridad",
+        "formatter": {
+          "type": "badge",
+          "options": {
+            "valueMap": {
+              "high": {
+                "label": "Alta",
+                "variant": "destructive",
+                "className": "font-semibold"
+              },
+              "medium": {
+                "label": "Media",
+                "variant": "outline",
+                "className": "bg-yellow-50 text-yellow-700 border-yellow-200"
+              },
+              "low": {
+                "label": "Baja",
+                "variant": "secondary"
+              }
+            }
+          }
+        }
+      },
+      {
+        "key": "progress",
+        "label": "Progreso",
+        "formatter": {
+          "type": "percentage",
+          "options": {
+            "decimals": 0,
+            "className": "font-semibold",
+            "conditionalFormatting": [
+              {
+                "condition": "value >= 0.8",
+                "className": "text-green-600"
+              },
+              {
+                "condition": "value >= 0.5",
+                "className": "text-yellow-600"
+              },
+              {
+                "condition": "value < 0.5",
+                "className": "text-red-600"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "budget",
+        "label": "Presupuesto",
+        "formatter": {
+          "type": "currency",
+          "options": {
+            "currency": "EUR",
+            "decimals": 2,
+            "className": "font-semibold text-green-600"
+          }
+        }
+      },
+      {
+        "key": "createdAt",
+        "label": "Fecha de Creación",
+        "formatter": {
+          "type": "date",
+          "options": {
+            "format": "medium",
+            "locale": "es-ES",
+            "className": "text-muted-foreground"
+          }
+        }
+      },
+      {
+        "key": "dueDate",
+        "label": "Fecha Límite",
+        "formatter": {
+          "type": "date",
+          "options": {
+            "format": "relative",
+            "className": "text-sm",
+            "conditionalFormatting": [
+              {
+                "condition": "(new Date(value) - new Date()) < 24*60*60*1000",
+                "className": "text-red-600 font-bold bg-red-50 px-2 py-1 rounded"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "assignedTo",
+        "label": "Asignado a",
+        "formatter": {
+          "type": "icon-text",
+          "options": {
+            "icon": "user",
+            "iconPosition": "left",
+            "className": "text-blue-600"
+          }
+        }
+      },
+      {
+        "key": "category",
+        "label": "Categoría",
+        "formatter": {
+          "type": "icon",
+          "options": {
+            "valueMap": {
+              "bug": {
+                "icon": "alert-circle",
+                "className": "text-red-500"
+              },
+              "feature": {
+                "icon": "star",
+                "className": "text-blue-500"
+              },
+              "documentation": {
+                "icon": "file-text",
+                "className": "text-green-500"
+              },
+              "improvement": {
+                "icon": "zap",
+                "className": "text-yellow-500"
+              }
+            }
+          }
+        }
+      },
+      {
+        "key": "repository",
+        "label": "Repositorio",
+        "formatter": {
+          "type": "link",
+          "options": {
+            "href": "https://github.com/{value}",
+            "target": "_blank",
+            "template": "📦 {value}",
+            "linkClassName": "text-blue-600 hover:text-blue-800"
+          }
+        }
+      },
+      {
+        "key": "avatar",
+        "label": "Avatar",
+        "formatter": {
+          "type": "image",
+          "options": {
+            "width": 32,
+            "height": 32,
+            "className": "rounded-full",
+            "fallbackSrc": "/placeholder-user.jpg"
+          }
+        }
+      },
+      {
+        "key": "estimate",
+        "label": "Estimación",
+        "formatter": {
+          "type": "custom",
+          "options": {
+            "template": "{value}h",
+            "className": "font-medium bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs",
+            "conditionalFormatting": [
+              {
+                "condition": "value > 20",
+                "className": "font-bold bg-red-50 text-red-700 px-2 py-1 rounded-full text-xs"
+              },
+              {
+                "condition": "value <= 4",
+                "className": "font-medium bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "tags",
+        "label": "Etiquetas",
+        "formatter": {
+          "type": "html",
+          "options": {
+            "template": "<div class='flex flex-wrap gap-1'>{value}</div>",
+            "className": "max-w-48"
+          }
+        }
+      }
+    ]
+  },
+  "globalOptions": {
+    "locale": "es-ES",
+    "currency": "EUR",
+    "dateFormat": "medium",
+    "theme": "light"
+  }
+}

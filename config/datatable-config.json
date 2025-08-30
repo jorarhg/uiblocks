@@ -1,0 +1,131 @@
+{
+  "tableOptions": {
+    "searchKey": "title",
+    "searchPlaceholder": "Escriba su búsqueda...",
+    "defaultFilters": ["status", "priority"],
+    "showViewOptions": true,
+    "showAddFilter": true,
+    "className": ""
+  },
+  "statusMap": {
+    "backlog": {
+      "icon": "CircleDashed",
+      "label": "Backlog"
+    },
+    "todo": {
+      "icon": "CircleDashed", 
+      "label": "Todo"
+    },
+    "in-progress": {
+      "icon": "Clock",
+      "label": "In Progress"
+    },
+    "done": {
+      "icon": "CircleCheck",
+      "label": "Done"
+    },
+    "canceled": {
+      "icon": "XCircle",
+      "label": "Canceled"
+    }
+  },
+  "priorityMap": {
+    "high": {
+      "variant": "outline",
+      "className": "bg-red-50 text-red-700 border-red-200",
+      "label": "High"
+    },
+    "medium": {
+      "variant": "outline",
+      "className": "bg-blue-50 text-blue-700 border-blue-200", 
+      "label": "Medium"
+    },
+    "low": {
+      "variant": "outline",
+      "className": "bg-green-50 text-green-700 border-green-200",
+      "label": "Low"
+    }
+  },
+  "ui": {
+    "texts": {
+      "selectAll": "Select all",
+      "selectRow": "Select row",
+      "actions": "Actions",
+      "copyTaskId": "Copy task ID",
+      "viewDetails": "View details",
+      "editTask": "Edit task",
+      "deleteTask": "Delete task",
+      "openMenu": "Open menu",
+      "estimateEmpty": "-",
+      "dateEmpty": "-",
+      "urgentYes": "Yes",
+      "urgentNo": "No"
+    },
+    "columns": [
+      {
+        "id": "select",
+        "type": "checkbox",
+        "enableSorting": false,
+        "enableHiding": false
+      },
+      {
+        "accessorKey": "id",
+        "header": "Task",
+        "type": "text",
+        "prefix": "TASK-",
+        "className": "font-medium"
+      },
+      {
+        "accessorKey": "type",
+        "header": "Type", 
+        "type": "badge",
+        "variant": "outline",
+        "className": "capitalize"
+      },
+      {
+        "accessorKey": "title",
+        "header": "Title",
+        "type": "text"
+      },
+      {
+        "accessorKey": "status",
+        "header": "Status",
+        "type": "status",
+        "enableFiltering": true
+      },
+      {
+        "accessorKey": "priority",
+        "header": "Priority",
+        "type": "priority", 
+        "enableFiltering": true
+      },
+      {
+        "accessorKey": "estimate",
+        "header": "Estimate (hrs)",
+        "type": "number",
+        "suffix": "h",
+        "emptyText": "-",
+        "emptyClassName": "text-muted-foreground"
+      },
+      {
+        "accessorKey": "createdAt",
+        "header": "Created",
+        "type": "date",
+        "emptyText": "-",
+        "emptyClassName": "text-muted-foreground"
+      },
+      {
+        "accessorKey": "isUrgent",
+        "header": "Urgent",
+        "type": "boolean",
+        "enableFiltering": true,
+        "trueVariant": "destructive",
+        "falseVariant": "secondary"
+      },
+      {
+        "id": "actions",
+        "type": "actions"
+      }
+    ]
+  }
+}
