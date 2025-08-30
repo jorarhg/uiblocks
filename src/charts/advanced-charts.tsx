@@ -143,9 +143,14 @@ export const HeatmapChart: React.FC<{ data: HeatmapCellDatum[]; xKeys?: (string|
             <div className="absolute left-0 right-0 bottom-0 translate-y-full mt-2 grid text-[10px] font-medium text-muted-foreground" style={{ gridTemplateColumns: `repeat(${xs.length}, 1fr)` }} aria-label="Eje X">
               {xs.map(x=> <div key={`x-${x}`} className="text-center truncate px-1">{String(x)}</div>)}
             </div>
-            {/* Eje Y izquierdo */}
-            <div className="absolute top-0 bottom-0 -translate-x-full mr-2 flex flex-col justify-center gap-1" aria-label="Eje Y">
-              {ys.map(y=> <div key={`y-${y}`} className="text-[10px] font-medium text-muted-foreground h-full flex items-center justify-end pr-1" style={{ height: `calc(100% / ${ys.length})` }}>{String(y)}</div>)}
+            {/* Eje Y izquierdo (distribución completa, alineado a la izquierda del grid) */}
+            <div className="absolute top-0 bottom-0 -translate-x-full mr-2 flex flex-col justify-between" aria-label="Eje Y">
+              {ys.map(y=> (
+                <div
+                  key={`y-${y}`}
+                  className="text-[10px] font-medium text-muted-foreground flex items-center justify-end pr-1"
+                >{String(y)}</div>
+              ))}
             </div>
           </>
         )}
