@@ -6,6 +6,35 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.prose {
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  --tw-prose-links: hsl(var(--primary));
+  --tw-prose-bold: hsl(var(--foreground));
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-bullets: hsl(var(--muted-foreground));
+  --tw-prose-hr: hsl(var(--border));
+  --tw-prose-quotes: hsl(var(--foreground));
+  --tw-prose-code: hsl(var(--foreground));
+  --tw-prose-th-borders: hsl(var(--border));
+  --tw-prose-td-borders: hsl(var(--border));
+  @apply leading-relaxed; 
+}
+
+.prose code {
+  @apply rounded bg-muted px-1.5 py-0.5 text-[0.85em] font-medium;
+}
+.prose pre code { @apply bg-transparent px-0 py-0 text-[0.9em]; }
+.prose pre { @apply rounded-lg border bg-muted/40 backdrop-blur px-4 py-3; }
+.prose h1, .prose h2, .prose h3 { @apply scroll-mt-24 font-semibold tracking-tight; }
+.prose table { @apply w-full text-sm; }
+.prose thead { @apply border-b; }
+.prose th { @apply bg-muted/50 font-medium px-2 py-1.5 text-left; }
+.prose td { @apply px-2 py-1.5 align-top; }
+.prose ul > li { @apply marker:text-muted-foreground; }
+.prose blockquote { @apply border-l-4 border-border/60 bg-muted/30 px-4 py-2 rounded-r; }
+.dark .prose code { @apply bg-muted/60; }
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

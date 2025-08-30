@@ -1,5 +1,5 @@
 {
-  "name": "@your-org/datatable-ui",
+  "name": "@teribit/datatable-ui",
   "version": "1.0.0",
   "description": "Una biblioteca de componentes de tabla altamente personalizables construida con React, TypeScript, shadcn/ui y Tailwind CSS",
   "main": "dist/index.js",

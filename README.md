@@ -103,6 +103,19 @@ Sistema que se adapta automáticamente a tus datos:
 - Validación automática
 - Formateadores inteligentes
 
+### Charts (Recharts)
+Integración ligera de gráficas reutilizables basada en Recharts con estilos coherentes al sistema.
+
+Ejemplos rápidos:
+```tsx
+import { SimpleLineChart, MultiLineChart, SimpleBarChart, StackedBarChart, SimpleAreaChart } from '@teribit/ui-blocks'
+
+<SimpleLineChart data={[{ category: 'Ene', value: 120 }]} />
+<SimpleBarChart data={[{ category: 'Ene', value: 120 }]} />
+```
+
+Más detalles en `docs/charts.md`.
+
 ## 🎨 Ejemplos
 
 ### Tabla Básica

@@ -1,0 +1,12 @@
+// Re-exports de componentes UI base (shadcn adaptados)
+export * from './badge';
+export * from './button';
+export * from './table';
+export * from './input';
+export * from './dialog';
+export * from './popover';
+export * from './separator';
+export * from './dropdown-menu';
+export * from './select';
+export * from './command';
+//# sourceMappingURL=index.js.map

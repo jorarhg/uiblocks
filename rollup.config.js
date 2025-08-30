@@ -1,5 +1,6 @@
 import { defineConfig } from 'rollup'
 import typescript from '@rollup/plugin-typescript'
+import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
@@ -21,13 +22,14 @@ export default defineConfig({
   ],
   plugins: [
     peerDepsExternal(),
-    nodeResolve({
+    resolve({
       browser: true,
     }),
     commonjs(),
     typescript({
       declaration: true,
       declarationDir: 'dist',
+      jsx: 'react',
       exclude: [
         'app/**/*',
         '**/*.test.ts',

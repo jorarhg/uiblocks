@@ -23,3 +23,6 @@ export { useIsMobile } from "./hooks/use-mobile"
 
 // Configuraciones
 export { getConfigFromJSON, getTableOptionsFromConfig } from "./lib/column-factory"
+
+// Charts
+export { BaseLineChart, SimpleLineChart, MultiLineChart, LineChartWithReference } from "./components/charts/line-charts"

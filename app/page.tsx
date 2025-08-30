@@ -40,53 +40,30 @@ const blockCategories = [
 
 export default function HomePage() {
   return (
-    <div className="flex flex-col">
-      {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto px-6 py-4">
-          <nav className="flex items-center justify-between">
-            <Link href="/" className="flex items-center space-x-2">
-              <Blocks className="h-6 w-6" />
-              <span className="font-bold text-xl">UI Blocks</span>
-            </Link>
-            
-            <div className="flex items-center space-x-6">
-              <Link href="/docs" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-                Documentation
-              </Link>
-              <Link href="/blocks" className="text-sm font-medium text-muted-foreground hover:text-foreground">
-                Browse Blocks
-              </Link>
-              <Button asChild size="sm">
-                <Link href="/docs/installation">Get Started</Link>
-              </Button>
-            </div>
-          </nav>
-        </div>
-      </header>
+  <div className="flex flex-col">
 
       {/* Hero Section */}
-      <section className="py-24 px-6">
-        <div className="container mx-auto text-center">
+      <section className="pt-20 pb-16 md:pt-28 md:pb-20 px-4">
+        <div className="container max-w-6xl mx-auto text-center">
           <div className="flex justify-center mb-6">
             <div className="p-4 bg-primary/10 rounded-2xl">
               <Blocks className="h-12 w-12 text-primary" />
             </div>
           </div>
           
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold mb-5 tracking-tight">
             Build with{" "}
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               UI Blocks
             </span>
           </h1>
           
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-3xl mx-auto leading-relaxed">
             Una colección creciente de componentes UI altamente personalizables y reutilizables. 
             Cada block está diseñado para resolver problemas específicos con máxima flexibilidad.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-14">
             <Button asChild size="lg" className="h-12 px-8">
               <Link href="/docs/installation">
                 Get Started
@@ -99,7 +76,7 @@ export default function HomePage() {
           </div>
 
           {/* Block Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 max-w-4xl mx-auto">
             {blockCategories.map((category, index) => (
               <Card key={index} className={`border-border/50 hover:shadow-lg transition-shadow ${category.comingSoon ? 'opacity-75' : ''}`}>
                 <CardHeader className="text-center pb-4">
@@ -147,17 +124,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-muted/30">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Why UI Blocks?</h2>
-            <p className="text-xl text-muted-foreground">
+  {/* Features Section */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container max-w-6xl mx-auto px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight mb-4">Why UI Blocks?</h2>
+            <p className="text-base md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               Cada block está diseñado con principios de reutilización y escalabilidad
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             <div className="text-center">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🔧</span>
@@ -222,8 +199,8 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-12">
-        <div className="container mx-auto px-6 text-center">
+      <footer className="border-t py-8 md:py-12">
+        <div className="container max-w-6xl mx-auto px-4 text-center">
           <p className="text-muted-foreground">
             Built with ❤️ using{" "}
             <Link href="https://ui.shadcn.com" className="font-medium underline underline-offset-4">

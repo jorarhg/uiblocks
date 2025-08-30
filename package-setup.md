@@ -22,7 +22,7 @@ dynamic-datatable-package/
 ## Paso 2: Package.json para NPM
 ```json
 {
-  "name": "@your-org/dynamic-datatable",
+  "name": "@teribit/dynamic-datatable",
   "version": "1.0.0",
   "description": "Sistema dinámico de DataTable con acciones, filtros y configuración JSON",
   "main": "dist/index.js",
