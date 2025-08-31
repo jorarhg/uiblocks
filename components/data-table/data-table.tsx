@@ -21,8 +21,28 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DataTableToolbar } from "./data-table-toolbar"
 import { DataTablePagination } from "./data-table-pagination"
 
+// Configuración simplificada de columnas
+export interface SimpleColumnConfig<TData> {
+  /** clave (puede usar dot notation) */
+  key: string
+  /** etiqueta de cabecera */
+  label: string
+  /** habilita ordenamiento (alias sortable) */
+  sortable?: boolean
+  enableSorting?: boolean
+  /** permitir ocultar; por defecto true */
+  hideable?: boolean
+  /** función para derivar el valor (override de key) */
+  accessor?: (row: TData) => any
+  /** render personalizado de la celda */
+  render?: (value: any, row: TData) => React.ReactNode
+}
+
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
+  /** ColumnDef avanzadas (tiene prioridad sobre simpleColumns) */
+  columns?: ColumnDef<TData, TValue>[]
+  /** Configuración simple para generar columnas básicas */
+  simpleColumns?: SimpleColumnConfig<TData>[]
   data: TData[]
   searchKey?: string
   searchPlaceholder?: string
@@ -40,8 +60,9 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
+  simpleColumns,
   data,
-  searchKey = "title",
+  searchKey,
   searchPlaceholder,
   filters,
 }: DataTableProps<TData, TValue>) {
@@ -50,9 +71,39 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [sorting, setSorting] = React.useState<SortingState>([])
 
+  // Generar columnas si se usa configuración simple y no se pasaron columnas avanzadas
+  const generatedColumns = React.useMemo<ColumnDef<TData, any>[] | undefined>(() => {
+    if (columns || !simpleColumns) return undefined
+    return simpleColumns.map(cfg => {
+      const enableSorting = cfg.sortable ?? cfg.enableSorting ?? false
+      const col: ColumnDef<TData, any> = {
+        accessorKey: cfg.accessor ? undefined : cfg.key,
+        id: cfg.key,
+        header: cfg.label,
+        enableSorting,
+        enableHiding: cfg.hideable !== false,
+      }
+      if (cfg.accessor) {
+        ;(col as any).accessorFn = (row: TData) => cfg.accessor!(row)
+      }
+      if (cfg.render) {
+        col.cell = ({ row, getValue }) => {
+          const rowData = row.original as TData
+            // valor: si hay accessor se llamará accessorFn; si no, getValue
+          const value = cfg.accessor ? cfg.accessor(rowData) : getValue()
+          return cfg.render!(value, rowData)
+        }
+      }
+      return col
+    })
+  }, [columns, simpleColumns])
+
+  const finalColumns = (columns || generatedColumns) as ColumnDef<TData, TValue>[]
+  const effectiveSearchKey = searchKey || (simpleColumns?.[0]?.key) || 'title'
+
   const table = useReactTable({
     data,
-    columns,
+    columns: finalColumns,
     state: {
       sorting,
       columnVisibility,
@@ -74,7 +125,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} searchKey={searchKey} searchPlaceholder={searchPlaceholder} filters={filters} />
+  <DataTableToolbar table={table} searchKey={effectiveSearchKey} searchPlaceholder={searchPlaceholder} filters={filters} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -101,7 +152,7 @@ export function DataTable<TData, TValue>({
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell colSpan={finalColumns.length} className="h-24 text-center">
                   No results.
                 </TableCell>
               </TableRow>

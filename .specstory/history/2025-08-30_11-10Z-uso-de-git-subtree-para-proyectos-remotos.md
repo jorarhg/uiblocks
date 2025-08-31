@@ -5148,7 +5148,41 @@ Documentar props en una sección PropsTable (añadir a tus metadatos).
 
 _**Assistant**_
 
+Busco cómo se documentan props para integrarlo en PropsTable y luego aplicar cambios. Primero creo un commit con el estado actual antes de añadir tooltips y documentación. 
+```
 
+```
+
+```
+
+```
+
+```
+
+```
+Implementado:
+
+- Commit inicial extracción componente público.
+- Añadidos tooltips automáticos al colapsar (accesibilidad/mejor discoverability).
+- Documentadas props en `props-data.ts` y mostradas en la página (`PropsTable`).
+- Insertada sección CollapsibleSidebarTabs en docs.
+- Sin errores de TypeScript. Commits creados:
+  1. feat(tabs): extrae CollapsibleSidebarTabs como componente público y simplifica demos
+  2. feat(collapsible-sidebar-tabs): tooltips en modo colapsado y documentación de props
+
+¿Algo más que quieras añadir (onCollapseChange, control externo, tests)?
+
+---
+
+_**User**_
+
+en los bloques, en la parte de las datatables, no tenemos modo de personalizar las cabeceras de la tabla, tipicamente se puede lograr pasando un array con objetos que serviran para configurar la datatble como activar ordenamiento, asi como label y key, entre otros
+
+---
+
+_**Assistant**_
+
+Reviso implementación actual de DataTable y fábricas de columnas para entender cómo agregar configuración de cabeceras. 
 
 ---
 

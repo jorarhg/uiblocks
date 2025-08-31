@@ -31,6 +31,36 @@ export default function DataTablePage() {
         </div>
 
         <div>
+          <h2 className="text-2xl font-bold mb-4">Modo simple (config de cabeceras)</h2>
+          <p className="text-sm text-muted-foreground mb-3">Define columnas pasando <code>simpleColumns</code> con objetos declarativos (key, label, sortable, render, etc.). Ideal para prototipos rápidos.</p>
+          <CodeBlock
+            language="tsx"
+            code={`import { DataTable } from "@/components/data-table/data-table"
+
+interface User { id: string; name: string; email: string; role: string }
+
+const data: User[] = [
+  { id: '1', name: 'Ada', email: 'ada@ex.com', role: 'admin' },
+  { id: '2', name: 'Linus', email: 'linus@ex.com', role: 'user' },
+]
+
+export default function Example(){
+  return (
+    <DataTable
+      simpleColumns={[
+        { key: 'name', label: 'Nombre', sortable: true },
+        { key: 'email', label: 'Correo' },
+        { key: 'role', label: 'Rol', render: (v) => <span className="capitalize">{v}</span> },
+      ]}
+      data={data}
+      searchPlaceholder="Buscar usuario..."
+    />
+  )
+}`}
+          />
+        </div>
+
+        <div>
           <h2 className="text-2xl font-bold mb-4">Uso básico</h2>
           <CodeBlock
             language="tsx"
