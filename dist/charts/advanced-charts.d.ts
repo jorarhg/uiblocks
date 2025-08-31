@@ -51,18 +51,23 @@ export interface HeatmapCellDatum {
     y: string | number;
     value: number;
 }
-export declare const HeatmapChart: React.FC<{
+export interface HeatmapChartProps {
     data: HeatmapCellDatum[];
     xKeys?: (string | number)[];
     yKeys?: (string | number)[];
     height?: number;
+    width?: number | string;
     className?: string;
     colors?: {
         from: string;
         to: string;
     };
+    baseColor?: string;
+    colorStops?: string[];
     valueFormatter?: (v: number) => string | number;
     gap?: number;
     showCellValues?: boolean;
     showAxes?: boolean;
-}>;
+    title?: string;
+}
+export declare const HeatmapChart: React.FC<HeatmapChartProps>;
