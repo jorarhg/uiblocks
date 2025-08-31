@@ -126,7 +126,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     props: [
       { name: 'value', type: str, required: true, description: 'Identificador de la tab.' },
       { name: 'size', type: `'sm' | 'md' | 'lg'`, default: 'md', description: 'Tamaño.' },
-      { name: 'variant', type: `'default' | 'underline' | 'pill'`, default: 'default', description: 'Estilo visual.' },
+  { name: 'variant', type: `'default' | 'underline' | 'pill' | 'icon' | 'number'`, default: 'default', description: 'Estilo visual / layout del trigger.' },
     ]
   },
   Dialog: {

@@ -4343,7 +4343,151 @@ has un commit con los avances
 
 _**Assistant**_
 
-Obtengo lista de cambios y hago commit con un mensaje resumido de las mejoras. 
+Obtengo lista de cambios y hago commit con un mensaje resumido de las mejoras. Commit creado: 4a61f28 con todas las mejoras (theming custom, nuevas variantes y páginas de docs, props centralizadas y test de Button). ¿Necesitas push o un resumen más breve?
+
+---
+
+_**User**_
+
+ahora puedes agregar graficos de tipo gauge?
+
+---
+
+_**Assistant**_
+
+Reviso implementación actual de charts para replicar patrón antes de añadir gauge. Reviso archivos de chart para crear GaugeChart y actualizar página de charts. Leo la página de charts para agregar ejemplo de gauge. Voy a crear el componente GaugeChart, exportarlo y agregar un bloque de ejemplo en la página de charts. Luego compilo y hago commit. 
+```
+
+```
+Corrijo prop clockWise a clockwise según API Recharts y ajusto overlay de valor centrado sin superposición. 
+```
+
+```
+Quito prop clockwise, Recharts llena sin ella; ajusto start/end para sentido horario correcto; añado track neutro manual. 
+```
+
+```
+Quito prop barSize del RadialBar y adapto grosor usando inner/outer radius percent calculado. 
+```
+
+```
+Actualizo exports para incluir GaugeChart. 
+```
+
+```
+Modifico página de charts para usar GaugeChart y añadir bloque y agrupación si necesario. 
+```
+
+```
+Necesito crear barrel exports de otros charts inexistentes (SimpleBarChart etc.) antes de importar Gauge o eliminar import no exportado; primero leo si existen esos componentes. Busco archivo index del paquete para exportar GaugeChart. Creo export en src charts y añado gauge-chart archivo en paquete fuente si se distribuye; actualmente lo añadimos solo en app components, debe replicarse en packages/ui-blocks para importación por '@teribit/ui-blocks'. Copio gauge a packages ui-blocks src/charts. Exporto gauge en barrel del paquete charts; buscar advanced-charts. Necesito exportar gauge en paquete src index. 
+```
+
+```
+Corrijo imports en paquete para usar rutas relativas internas en vez de alias app. Abro chart original en paquete (../ui/chart). Necesito proveer ChartContainer interno en paquete; paquete charts usan '../ui/chart'; gauge usó '@/components/ui/chart'. Reemplazo import a '../ui/chart' y utils para consistencia. 
+```
+
+```
+
+
+---
+
+_**User**_
+
+continua
+
+---
+
+_**Assistant**_
+
+Inspecciono componentes de charts existentes para replicar patrón y luego agrego GaugeChart, lo exporto y actualizo la página de charts. Añadido GaugeChart y ejemplo, commit e2c25e1 listo. ¿Algún ajuste extra (colores dinámicos, rangos, múltiple secciones)?
+
+---
+
+_**User**_
+
+ahora volvamos ala lista de componentes en docs, vas agregar el componente tabs y las variantes si tiene
+
+---
+
+_**Assistant**_
+
+Actualizo la página de documentación de Tabs para incluir demostraciones de variantes y props. 
+```
+
+```
+
+
+---
+
+_**User**_
+
+ahora agrega la variante con icono y de tabs vertical con icono
+
+---
+
+_**Assistant**_
+
+
+```
+
+```
+
+```
+
+```
+
+
+---
+
+_**User**_
+
+las tabs vertiales hazla ghost y permite hover de lado sel panel elimina el gap, pero aumenta el espacio de la tab
+
+---
+
+_**Assistant**_
+
+Actualizo el ejemplo vertical de Tabs para variante ghost, sin gap y con mayor padding en los triggers. 
+```
+
+```
+
+
+---
+
+_**User**_
+
+permite que el ancho colapse hasta el ancho del ciono, con un toggle expandas/copases, y maneja variante icono, variante numero
+
+---
+
+_**Assistant**_
+
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+
+---
+
+_**User**_
+
+la variante con numero era para una tabs vertical con tabs colapsables
+
+---
+
+_**Assistant**_
+
+
 
 ---
 

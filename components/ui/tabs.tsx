@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
 type Justify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
 type ListVariant = 'default' | 'ghost' | 'outline'
 type TriggerSize = 'sm' | 'md' | 'lg'
-type TriggerVariant = 'default' | 'underline' | 'pill'
+type TriggerVariant = 'default' | 'underline' | 'pill' | 'icon' | 'number'
 
 const Tabs = TabsPrimitive.Root
 
@@ -39,7 +39,9 @@ const TabsList = React.forwardRef<
     <TabsPrimitive.List
       ref={ref}
       className={cn(
-        "inline-flex h-10 items-center rounded-md p-1 text-muted-foreground gap-1",
+  "inline-flex h-10 items-center rounded-md p-1 text-muted-foreground gap-1",
+  // Orientación vertical: columna, altura auto y sin h-10 fija
+  "data-[orientation=vertical]:flex-col data-[orientation=vertical]:h-auto data-[orientation=vertical]:items-stretch data-[orientation=vertical]:p-2 data-[orientation=vertical]:gap-2",
         variantClass,
         justifyClass,
         fullWidth && 'w-full',
@@ -69,7 +71,9 @@ const TabsTrigger = React.forwardRef<
   const variantClass = {
     default: 'rounded-sm data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm',
     underline: 'rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-foreground',
-    pill: 'rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+  pill: 'rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground',
+  icon: 'rounded-md size-11 p-0 [&>.tab-label]:sr-only data-[state=active]:bg-primary/10 data-[state=active]:text-foreground',
+  number: 'rounded-md min-w-[2.25rem] h-9 px-0 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
   }[variant]
   return (
     <TabsPrimitive.Trigger
