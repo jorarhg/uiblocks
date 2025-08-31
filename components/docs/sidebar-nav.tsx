@@ -1,5 +1,6 @@
 "use client"
 
+import * as React from 'react'
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -12,6 +13,23 @@ interface SidebarNavProps {
 
 export function SidebarNav({ items }: SidebarNavProps) {
   const pathname = usePathname()
+  const [activeHash, setActiveHash] = React.useState<string>("")
+
+  // Observa headings dentro del contenedor principal (usamos data-block-root para página de bloques)
+  React.useEffect(()=> {
+    const root = document.querySelector('[data-block-root]') || document
+    const headings = Array.from(root.querySelectorAll('section[id]')) as HTMLElement[]
+    if(!headings.length) return
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          setActiveHash('#'+entry.target.id)
+        }
+      })
+    }, { root: null, rootMargin: '0px 0px -65% 0px', threshold: 0 })
+    headings.forEach(h=> observer.observe(h))
+    return ()=> { observer.disconnect() }
+  },[])
 
   return items.length ? (
     <div className="w-full">
@@ -21,7 +39,7 @@ export function SidebarNav({ items }: SidebarNavProps) {
             {item.title}
           </h4>
           {item?.items?.length && (
-            <SidebarNavItems items={item.items} pathname={pathname} />
+            <SidebarNavItems items={item.items} pathname={pathname} activeHash={activeHash} />
           )}
         </div>
       ))}
@@ -32,9 +50,10 @@ export function SidebarNav({ items }: SidebarNavProps) {
 interface SidebarNavItemsProps {
   items: NavItem[]
   pathname: string | null
+  activeHash?: string
 }
 
-function SidebarNavItems({ items, pathname }: SidebarNavItemsProps) {
+function SidebarNavItems({ items, pathname, activeHash }: SidebarNavItemsProps) {
   return items?.length ? (
     <div className="grid grid-flow-row auto-rows-max text-sm">
       {items.map((item, index) =>
@@ -45,7 +64,7 @@ function SidebarNavItems({ items, pathname }: SidebarNavItemsProps) {
             className={cn(
               "group flex w-full items-center rounded-md border border-transparent px-2 py-1 hover:underline",
               item.disabled && "cursor-not-allowed opacity-60",
-              pathname === item.href
+              pathname === item.href || (activeHash && item.href === activeHash.replace(/^#/,''))
                 ? "font-medium text-foreground"
                 : "text-muted-foreground"
             )}
