@@ -4487,6 +4487,122 @@ la variante con numero era para una tabs vertical con tabs colapsables
 
 _**Assistant**_
 
+Actualizo la doc reemplazando el ejemplo horizontal numérico por una demo vertical colapsable con triggers numéricos y sub‑tabs. 
+```
+
+```
+Leo el archivo para agregar el componente CollapsibleNumberTabsDemo necesario. Agrego la definición del componente CollapsibleNumberTabsDemo debajo para resolver la referencia. 
+```
+
+```
+Verifico errores del archivo actualizado. Corrijo tipos en el componente numérico y verifico variantes declaradas en metadata para incluir 'number'. 
+```
+
+```
+Reviso errores de nuevo. Buscar metadata de TabsTrigger para añadir variante number si falta. Busco archivo de metadata de props. Localizo archivo props-data para editar variantes de TabsTrigger. Actualizo la metadata de TabsTrigger para variantes icon y number. 
+```
+
+```
+Verifico errores tras actualizar metadata. Creo commit de los cambios realizados (docs tabs y metadata). GitHub Copilot
+
+Actualizado: la variante numérica ahora se muestra sólo en el ejemplo vertical colapsable con subtabs y se añadió el componente `CollapsibleNumberTabsDemo`. También amplié la metadata de `TabsTrigger` para incluir `'icon' | 'number'`. Commit realizado.
+
+¿Algo más que quieras ajustar?
+
+---
+
+_**User**_
+
+en las tabs colasables de icono, remplaza el texto colapsar por un icono de cevron izquierda, derecha segun aplique, los iconos tendran borde ligero y sobreado suave, y cuando se expanda tambien deberan verse los iconos con el mismo borde y el mismo fondo
+
+---
+
+_**Assistant**_
+
+Actualizo el demo colapsable para usar chevrons y estilos de borde/sombra en toggle e íconos. 
+```
+
+```
+Verifico errores tras la modificación. Creo commit para los cambios de iconos chevron y estilos. 
+
+---
+
+_**User**_
+
+en la tabs de iconos, el borde con elfondo deben coincidir, cuando maximices se debe ver el icono, le pusiste borde al icono pero debe haber espaciado dentro del icono en tamaño de 20px por defecto tanto en tabs expandidas como colapsadas
+
+---
+
+_**Assistant**_
+
+Actualizo el demo para envolver íconos con un contenedor con padding y estilos unificados, y sincronizo el snippet de código. 
+```
+
+```
+Verifico errores tras el refactor. Genero commit de los cambios recientes (padding y wrapper de iconos). 
+
+---
+
+_**User**_
+
+por favor, corrige se ve horrible, el tamaño del icono debe ser cuadrado, con espaciado interior y bordes ligeramente redondeados, elimina el otro fondo gris que pussite, el ghost debe abarcar tando el icono como el texto, reduce el tamaño a 18px, el icono de chevron cuando estan las tabs expandidas debe alinearse ala dereche y debe aparecer un texto ala izquierda cuando se colpasa el texto se oculta ese texto es un titulo de todas las tabs del tema que se trate pero es optional
+
+---
+
+_**Assistant**_
+
+Actualizo el demo y snippet de CollapsibleTabsDemo según nuevas especificaciones de iconos, header y chevron. 
+```
+
+```
+Verifico errores tras refactor final. Realizo commit de los ajustes visuales solicitados. 
+
+---
+
+_**User**_
+
+ok esta mejor el diseño, pero el color del ghost hazlo mas suave
+
+---
+
+_**Assistant**_
+
+Reviso el componente de Tabs para identificar clases del variant ghost y suavizar colores. Voy a suavizar el fondo activo/hover del trigger variante icon y luego haré commit. 
+```
+
+```
+Verifico errores del archivo modificado. Hago commit del ajuste de suavizado ghost/icon. 
+
+---
+
+_**User**_
+
+mas suave aun
+
+---
+
+_**Assistant**_
+
+Suavizo aún más el fondo de la variante icon cambiando a tonos neutros muy ligeros. 
+```
+
+```
+Verifico errores y hago commit. 
+
+---
+
+_**User**_
+
+has quue sea resizable las tabs verticales de icono pero limitado solo cresca un 30%max
+
+---
+
+_**Assistant**_
+
+Actualizaré el demo para hacerlo redimensionable con límite del 30% y luego validaré. 
+```
+
+```
 
 
 ---

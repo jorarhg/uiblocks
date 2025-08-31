@@ -2,8 +2,8 @@
 import { DocExample } from '@/components/docs/doc-example'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { PropsTable } from '@/components/docs/props-table'
-import { Home, Settings, Bell } from 'lucide-react'
-import { useState } from 'react'
+import { Home, Settings, Bell, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 
 export default function TabsComponentDoc(){
@@ -209,24 +209,63 @@ export function Demo(){
         description='Barra vertical que colapsa a sólo íconos y expande con un toggle.'
         preview={<CollapsibleTabsDemo />}
         code={`function CollapsibleTabsDemo(){
+  const BASE_WIDTH = 224 // px (w-56)
+  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.3) // +30%
   const [collapsed,setCollapsed]=useState(true)
+  const [width,setWidth]=useState(BASE_WIDTH)
+  const resizingRef = useRef(false)
+  const title='Secciones'
+  const iconWrapper='flex items-center justify-center rounded-md border border-border/60 h-9 w-9 p-1 shrink-0'
+  const iconSize='h-[18px] w-[18px]'
+  useEffect(()=>{ // listeners globales de resize
+    function onMove(e:MouseEvent){
+      if(!resizingRef.current) return
+      setWidth(w=>{
+        const next = Math.min(Math.max(BASE_WIDTH, w + e.movementX), MAX_WIDTH)
+        return next
+      })
+    }
+    function onUp(){ resizingRef.current=false }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+    return ()=>{ window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  },[])
   return (
     <Tabs defaultValue='home' orientation='vertical' className='flex w-full max-w-3xl rounded-md border overflow-hidden'>
-      <div className={cn('flex flex-col border-r transition-all duration-300', collapsed ? 'w-16' : 'w-56')}>
-        <button onClick={()=>setCollapsed(c=>!c)} className='h-11 flex items-center justify-center text-xs font-medium border-b hover:bg-muted/60'>
-          {collapsed ? '>' : '<'}
-        </button>
-        <TabsList variant='ghost' className='flex-1 p-1 data-[orientation=vertical]:p-1 overflow-y-auto'>
-          <TabsTrigger value='home' variant='icon' className={!collapsed ? 'justify-start gap-2 px-3 py-2 [&>.tab-label]:not-sr-only' : ''}>
-            <Home className='h-5 w-5' /><span className='tab-label text-sm'>{!collapsed && 'Home'}</span>
+      <div
+        className={cn('relative flex flex-col border-r transition-[width] duration-300', collapsed ? 'w-16' : '')}
+        style={!collapsed ? { width } : undefined}
+      >
+        <div className='flex items-center justify-between h-11 border-b px-2 select-none'>
+          {!collapsed && <span className='text-xs font-medium tracking-wide uppercase text-muted-foreground'>{title}</span>}
+          <button
+            onClick={()=>setCollapsed(c=>!c)}
+            aria-label={collapsed ? 'Expandir barra' : 'Colapsar barra'}
+            className='flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+          >
+            <span className={iconWrapper}>{collapsed ? <ChevronRight className={iconSize} /> : <ChevronLeft className={iconSize} />}</span>
+          </button>
+        </div>
+        <TabsList variant='ghost' className='flex-1 py-2 px-1 data-[orientation=vertical]:p-0 overflow-y-auto'>
+          <TabsTrigger value='home' variant='icon' className={cn('w-full gap-3 px-2 py-2', collapsed ? 'justify-center' : 'justify-start')}>
+            <span className={iconWrapper}><Home className={iconSize} /></span>
+            {!collapsed && <span className='text-sm'>Home</span>}
           </TabsTrigger>
-          <TabsTrigger value='alerts' variant='icon' className={!collapsed ? 'justify-start gap-2 px-3 py-2 [&>.tab-label]:not-sr-only' : ''}>
-            <Bell className='h-5 w-5' /><span className='tab-label text-sm'>{!collapsed && 'Alertas'}</span>
+          <TabsTrigger value='alerts' variant='icon' className={cn('w-full gap-3 px-2 py-2', collapsed ? 'justify-center' : 'justify-start')}>
+            <span className={iconWrapper}><Bell className={iconSize} /></span>
+            {!collapsed && <span className='text-sm'>Alertas</span>}
           </TabsTrigger>
-          <TabsTrigger value='settings' variant='icon' className={!collapsed ? 'justify-start gap-2 px-3 py-2 [&>.tab-label]:not-sr-only' : ''}>
-            <Settings className='h-5 w-5' /><span className='tab-label text-sm'>{!collapsed && 'Ajustes'}</span>
+          <TabsTrigger value='settings' variant='icon' className={cn('w-full gap-3 px-2 py-2', collapsed ? 'justify-center' : 'justify-start')}>
+            <span className={iconWrapper}><Settings className={iconSize} /></span>
+            {!collapsed && <span className='text-sm'>Ajustes</span>}
           </TabsTrigger>
         </TabsList>
+        {!collapsed && (
+          <div
+            onMouseDown={()=>{resizingRef.current=true}}
+            className='absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90 transition-colors'
+          />
+        )}
       </div>
       <div className='flex-1'>
         <TabsContent value='home' className='p-6'>Panel principal</TabsContent>
@@ -314,24 +353,63 @@ export function Demo(){
 }
 
 function CollapsibleTabsDemo(){
+  const BASE_WIDTH = 224
+  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.3)
   const [collapsed,setCollapsed]=useState(true)
+  const [width,setWidth]=useState(BASE_WIDTH)
+  const resizingRef = useRef(false)
+  const title='Secciones'
+  const iconWrapper='flex items-center justify-center rounded-md border border-border/60 h-9 w-9 p-1 shrink-0'
+  const iconSize='h-[18px] w-[18px]'
+  useEffect(()=>{
+    function onMove(e:MouseEvent){
+      if(!resizingRef.current) return
+      setWidth(w=>{
+        const next = w + e.movementX
+        return Math.min(Math.max(BASE_WIDTH, next), MAX_WIDTH)
+      })
+    }
+    function onUp(){ resizingRef.current=false }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+    return ()=>{ window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  },[])
   return (
     <Tabs defaultValue='home' orientation='vertical' className='flex w-full max-w-3xl rounded-md border overflow-hidden'>
-      <div className={cn('flex flex-col border-r transition-all duration-300', collapsed ? 'w-16' : 'w-56')}>
-        <button onClick={()=>setCollapsed(c=>!c)} className='h-11 flex items-center justify-center text-xs font-medium border-b hover:bg-muted/60'>
-          {collapsed ? 'Expandir' : 'Colapsar'}
-        </button>
-        <TabsList variant='ghost' className='flex-1 p-1 data-[orientation=vertical]:p-1 overflow-y-auto'>
-          <TabsTrigger value='home' variant='icon' className={!collapsed ? 'justify-start gap-2 px-3 py-2 [&>.tab-label]:not-sr-only' : ''}>
-            <Home className='h-5 w-5' /><span className='tab-label text-sm'>{!collapsed && 'Home'}</span>
+      <div
+        className={cn('relative flex flex-col border-r transition-[width] duration-300', collapsed ? 'w-16' : '')}
+        style={!collapsed ? { width } : undefined}
+      >
+        <div className='flex items-center justify-between h-11 border-b px-2 select-none'>
+          {!collapsed && <span className='text-xs font-medium tracking-wide uppercase text-muted-foreground'>{title}</span>}
+          <button
+            onClick={()=>setCollapsed(c=>!c)}
+            aria-label={collapsed ? 'Expandir barra' : 'Colapsar barra'}
+            className='flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+          >
+            <span className={iconWrapper}>{collapsed ? <ChevronRight className={iconSize} /> : <ChevronLeft className={iconSize} />}</span>
+          </button>
+        </div>
+        <TabsList variant='ghost' className='flex-1 py-2 px-1 data-[orientation=vertical]:p-0 overflow-y-auto'>
+          <TabsTrigger value='home' variant='icon' className={cn('w-full gap-3 px-2 py-2', collapsed ? 'justify-center' : 'justify-start')}>
+            <span className={iconWrapper}><Home className={iconSize} /></span>
+            {!collapsed && <span className='text-sm'>Home</span>}
           </TabsTrigger>
-          <TabsTrigger value='alerts' variant='icon' className={!collapsed ? 'justify-start gap-2 px-3 py-2 [&>.tab-label]:not-sr-only' : ''}>
-            <Bell className='h-5 w-5' /><span className='tab-label text-sm'>{!collapsed && 'Alertas'}</span>
+          <TabsTrigger value='alerts' variant='icon' className={cn('w-full gap-3 px-2 py-2', collapsed ? 'justify-center' : 'justify-start')}>
+            <span className={iconWrapper}><Bell className={iconSize} /></span>
+            {!collapsed && <span className='text-sm'>Alertas</span>}
           </TabsTrigger>
-            <TabsTrigger value='settings' variant='icon' className={!collapsed ? 'justify-start gap-2 px-3 py-2 [&>.tab-label]:not-sr-only' : ''}>
-            <Settings className='h-5 w-5' /><span className='tab-label text-sm'>{!collapsed && 'Ajustes'}</span>
+          <TabsTrigger value='settings' variant='icon' className={cn('w-full gap-3 px-2 py-2', collapsed ? 'justify-center' : 'justify-start')}>
+            <span className={iconWrapper}><Settings className={iconSize} /></span>
+            {!collapsed && <span className='text-sm'>Ajustes</span>}
           </TabsTrigger>
         </TabsList>
+        {!collapsed && (
+          <div
+            onMouseDown={()=>{resizingRef.current=true}}
+            className='absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90 transition-colors'
+          />
+        )}
       </div>
       <div className='flex-1'>
         <TabsContent value='home' className='p-6'>Panel principal</TabsContent>
