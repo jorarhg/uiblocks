@@ -28,10 +28,10 @@ const tableBlocks: BlockMeta[] = [
 export default function DataTablesPage(){
   return (
     <div className='space-y-16 py-8 md:py-12' data-block-root>
-      <section id='dt-overview' className='space-y-4'>
+      <header className='space-y-4'>
         <h1 className='text-3xl md:text-4xl font-semibold tracking-tight'>DataTable Blocks</h1>
-        <p className='text-muted-foreground max-w-2xl text-sm md:text-base leading-relaxed'>Variantes unificadas basadas en TanStack Table: búsqueda, paginación, filtros, placeholder personalizado, reordenación y agrupación. Cada ejemplo incluye pestañas de vista previa y código.</p>
-      </section>
+        <p className='text-muted-foreground max-w-2xl text-sm md:text-base leading-relaxed'>Variantes unificadas: búsqueda, filtros facetados, placeholder, reordenación y agrupación.</p>
+      </header>
       {tableBlocks.map(block => (
         <section key={block.id} id={block.id} className='space-y-6'>
           <h2 className='text-xl font-semibold tracking-tight'>{block.title}</h2>

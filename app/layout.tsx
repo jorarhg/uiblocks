@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { DocsHeader } from "@/components/docs/docs-header"
+import { ThemeProvider } from '@/components/theme-provider'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -14,14 +15,16 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body>
-        <div className="min-h-screen flex flex-col">
-          <DocsHeader />
-          <div className="flex-1">
-            {children}
+        <ThemeProvider defaultTheme='light' themes={['light','dark','custom']}>
+          <div className="min-h-screen flex flex-col">
+            <DocsHeader />
+            <div className="flex-1">
+              {children}
+            </div>
           </div>
-        </div>
+        </ThemeProvider>
       </body>
     </html>
   )

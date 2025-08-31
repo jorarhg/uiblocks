@@ -17,6 +17,9 @@ const radarData = [
 const heatGridX = ['L','M','X','J','V']
 const heatGridY = ['1','2','3','4']
 const heatGrid = heatGridX.flatMap(x => heatGridY.map(y => ({ x, y, value: (x.charCodeAt(0) + y.charCodeAt(0)) % 100 })))
+// Datos adicionales para variantes extra de heatmap
+const heatmapData = Array.from({length:7}).flatMap((_, y) => Array.from({length:7}).map((_, x) => ({ x, y, value: (x*7 + y*11) % 100 })))
+const rectValuesData = Array.from({length:4}).flatMap((_, y) => Array.from({length:16}).map((_, x) => ({ x, y, value: (x*19 + y*23) % 100 })))
 
 const chartBlocks: BlockMeta[] = [
   { id: 'chart-line-simple', title: 'Línea Simple', category: 'charts', description: 'Serie única con área.', preview: <div className='rounded-md'><SimpleLineChart data={lineData} /></div>, code: `<SimpleLineChart data={data} />`, status: 'stable', tags:['line'], payload: lineData },
@@ -30,6 +33,8 @@ const chartBlocks: BlockMeta[] = [
   { id: 'chart-radar', title: 'Radar', category: 'charts', description: 'Perfil multivariable.', preview: <div className='rounded-md'><SimpleRadarChart data={radarData} series={['serieA','serieB']} /></div>, code: `<SimpleRadarChart data={data} series={['serieA','serieB']} />`, status: 'beta', tags:['radar'], payload: radarData },
   { id: 'chart-heatmap-grid', title: 'Heatmap Grid', category: 'charts', description: 'Intensidad en grilla.', preview: <div className='rounded-md'><HeatmapChart data={heatGrid} /></div>, code: `<HeatmapChart data={data} />`, status: 'beta', tags:['heatmap','grid'], payload: heatGrid },
   { id: 'chart-heatmap-treemap', title: 'Heatmap Treemap', category: 'charts', description: 'Treemap intensidades.', preview: <div className='rounded-md'><SimpleHeatmap data={[{ name:'A', value:40 }, { name:'B', value:25 }, { name:'C', value:15 }, { name:'D', value:20 }]} /></div>, code: `<SimpleHeatmap data={data} />`, status: 'beta', tags:['heatmap','treemap'], payload: [{ name:'A', value:40 }, { name:'B', value:25 }, { name:'C', value:15 }, { name:'D', value:20 }] },
+  { id: 'chart-heatmap-colored', title: 'Heatmap Colores Custom', category: 'charts', description: 'Gradiente personalizado con stops.', preview: <div className='rounded-md'><HeatmapChart data={heatmapData} baseColor='#6366f1' colorStops={['#eef2ff','#6366f1','#312e81']} title='Patrón de Intensidad' /></div>, code: `<HeatmapChart data={data} baseColor='#6366f1' colorStops={["#eef2ff","#6366f1","#312e81"]} title='Patrón de Intensidad' />`, status: 'beta', tags:['heatmap','gradient'], payload: heatmapData },
+  { id: 'chart-heatmap-rect-values', title: 'Heatmap Rect Valores', category: 'charts', description: 'Rectangular con valores visibles.', preview: <div className='rounded-md'><HeatmapChart data={rectValuesData} height={180} gap={0.12} showAxes showCellValues title='Rect Valores' /></div>, code: `<HeatmapChart data={data} height={180} gap={0.12} showAxes showCellValues title='Rect Valores' />`, status: 'beta', tags:['heatmap','rect','values'], payload: rectValuesData },
 ]
 
 const groups: { title: string; id: string; match: (b: BlockMeta)=> boolean }[] = [

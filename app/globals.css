@@ -10,6 +10,12 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  @keyframes radio-pop {
+    0% { transform: scale(0.4); opacity: 0; }
+    60% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .animate-radio-pop { animation: radio-pop .22s cubic-bezier(.4,0,.2,1); }
 }
 
 @layer base {
@@ -81,6 +87,40 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .theme-custom {
+    --background: 210 40% 4%;
+    --foreground: 210 40% 96%;
+    --card: 210 40% 6%;
+    --card-foreground: 210 40% 96%;
+    --popover: 210 40% 6%;
+    --popover-foreground: 210 40% 96%;
+    --primary: 280 70% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 50% 18%;
+    --secondary-foreground: 210 40% 96%;
+    --muted: 210 30% 18%;
+    --muted-foreground: 210 15% 70%;
+    --accent: 160 60% 30%;
+    --accent-foreground: 210 40% 96%;
+    --destructive: 350 80% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 30% 24%;
+    --input: 210 30% 24%;
+    --ring: 280 70% 55%;
+    --chart-1: 280 70% 55%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 45 90% 55%;
+    --chart-4: 340 75% 55%;
+    --chart-5: 200 85% 45%;
+    --sidebar-background: 210 40% 6%;
+    --sidebar-foreground: 210 40% 96%;
+    --sidebar-primary: 280 70% 55%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 30% 18%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 210 30% 24%;
+    --sidebar-ring: 280 70% 55%;
   }
 }
 

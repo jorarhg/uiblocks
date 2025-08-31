@@ -22,27 +22,37 @@ export interface BlockMeta {
 export function BlockCard({ block }: { block: BlockMeta }) {
   const StatusIcon = block.status === 'stable' ? TableIcon : block.status === 'beta' ? Filter : LayoutTemplate
   const previewRef = React.useRef<HTMLDivElement | null>(null)
+  const codeRef = React.useRef<HTMLDivElement | null>(null)
   const [minHeight, setMinHeight] = React.useState<number>(220)
 
   React.useEffect(() => {
-    if (!previewRef.current) return
-    const el = previewRef.current
-    const ro = new ResizeObserver(() => {
-      const h = el.offsetHeight
-      setMinHeight(prev => (h > prev ? h : prev))
-    })
-    ro.observe(el)
-    setTimeout(() => {
-      if (el) {
-        const h = el.offsetHeight
-        setMinHeight(prev => (h > prev ? h : prev))
-      }
-    }, 0)
-    return () => ro.disconnect()
+    const previewEl = previewRef.current
+    if (!previewEl) return
+
+    const update = () => {
+      const ph = previewEl.offsetHeight || 0
+      const target = Math.max(220, ph)
+      setMinHeight(target)
+    }
+
+    const ro = new ResizeObserver(update)
+    ro.observe(previewEl)
+
+    // Primer cálculo tras render y siguiente frame (por layout / fuentes)
+    update()
+    const raf = requestAnimationFrame(update)
+    const t = setTimeout(update, 300)
+
+    return () => {
+      ro.disconnect()
+      cancelAnimationFrame(raf)
+      clearTimeout(t)
+    }
   }, [])
 
+
   return (
-    <Card className='flex flex-col overflow-hidden border-0 shadow-none bg-transparent p-0'>
+  <Card className='flex flex-col overflow-hidden border-0 shadow-none bg-transparent p-0'>
       <CardHeader className='pb-4'>
         <div className='flex items-start justify-between gap-4'>
           <div className='space-y-1'>
@@ -69,28 +79,34 @@ export function BlockCard({ block }: { block: BlockMeta }) {
         )}
       </CardHeader>
       <CardContent className='pt-0 flex-1 flex flex-col'>
+        <div className='rounded-lg border bg-background/40 backdrop-blur-sm flex-1 flex flex-col'>
         <Tabs defaultValue='preview' className='flex-1 flex flex-col'>
-          <TabsList className='mb-2 w-fit self-start justify-start'>
+          <TabsList className='px-2 py-1 justify-start w-full' fullWidth>
             <TabsTrigger value='preview'>Preview</TabsTrigger>
             <TabsTrigger value='code'><Code2 className='h-4 w-4 mr-1' />Code</TabsTrigger>
             {block.category === 'charts' && block.payload && (
               <TabsTrigger value='payload'>Payload</TabsTrigger>
             )}
           </TabsList>
-          <TabsContent value='preview' className='flex-1 m-0 rounded-md border bg-background p-5 overflow-auto' style={{ minHeight }}>
+          <TabsContent value='preview' className='flex-1 m-0 border-t p-5 overflow-auto' style={{ minHeight }}>
             <div ref={previewRef} className='relative h-full' aria-label={`Vista previa: ${block.title}`} role='group'>
               {block.preview}
             </div>
           </TabsContent>
-          <TabsContent value='code' className='flex-1 m-0 rounded-md border bg-black/95 p-0 overflow-hidden' style={{ minHeight }}>
-            <CodeBlock code={block.code} language='tsx' />
+          <TabsContent value='code' className='flex-1 m-0 border-t bg-black/95 p-0 overflow-auto relative min-h-0' style={{ minHeight, height: minHeight, maxHeight: minHeight }}>
+            <div ref={codeRef} className='h-full max-h-full flex flex-col'>
+              <CodeBlock code={block.code} language='tsx' />
+            </div>
           </TabsContent>
           {block.category === 'charts' && block.payload && (
-            <TabsContent value='payload' className='flex-1 m-0 rounded-md border bg-black/95 p-0 overflow-hidden' style={{ minHeight }}>
-              <CodeBlock code={JSON.stringify(block.payload, null, 2)} language='json' />
+            <TabsContent value='payload' className='flex-1 m-0 border-t bg-black/95 p-0 overflow-auto relative min-h-0' style={{ minHeight, height: minHeight, maxHeight: minHeight }}>
+              <div className='h-full max-h-full flex flex-col'>
+                <CodeBlock code={JSON.stringify(block.payload, null, 2)} language='json' />
+              </div>
             </TabsContent>
           )}
         </Tabs>
+        </div>
       </CardContent>
     </Card>
   )

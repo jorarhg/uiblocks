@@ -2,6 +2,7 @@ import Link from "next/link"
 import { Database } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { ThemeToggle } from '@/components/docs/theme-toggle'
 import { MainNav } from "@/components/docs/main-nav"
 import { MobileNav } from "@/components/docs/mobile-nav"
 import { docsConfig } from "@/config/docs/docs-config"
@@ -16,7 +17,8 @@ export function DocsHeader() {
           <div className="w-full flex-1 md:w-auto md:flex-none">
             {/* Search component could go here */}
           </div>
-          <nav className="flex items-center">
+          <nav className="flex items-center gap-2">
+            <ThemeToggle />
             <Button asChild size="sm">
               <Link href="/docs/installation">Get Started</Link>
             </Button>

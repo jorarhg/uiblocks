@@ -26,3 +26,20 @@ export { getConfigFromJSON, getTableOptionsFromConfig } from "./lib/column-facto
 
 // Charts
 export { BaseLineChart, SimpleLineChart, MultiLineChart, LineChartWithReference } from "./components/charts/line-charts"
+
+// Primitivos UI básicos (exportados para coincidir con ejemplos de docs)
+export { Button } from "./components/ui/button"
+export { Input } from "./components/ui/input"
+export { Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectLabel, SelectItem, SelectSeparator } from "./components/ui/select"
+export { Checkbox } from "./components/ui/checkbox"
+export { RadioGroup, RadioGroupItem } from "./components/ui/radio-group"
+export { Radio } from "./components/ui/radio"
+export { Switch } from "./components/ui/switch"
+export { Badge } from "./components/ui/badge"
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent } from "./components/ui/card"
+export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/ui/tabs"
+export { Dialog, DialogPortal, DialogOverlay, DialogClose, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "./components/ui/dialog"
+export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuCheckboxItem, DropdownMenuRadioItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuGroup, DropdownMenuPortal, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuRadioGroup } from "./components/ui/dropdown-menu"
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./components/ui/tooltip"
+
+

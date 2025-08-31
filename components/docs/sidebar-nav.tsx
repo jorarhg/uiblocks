@@ -12,10 +12,7 @@ interface SidebarNavProps {
 
 // Mapa que asocia páginas "overview" (sin hash en el link) al id de la primera sección real
 // Esto permite que el link Overview deje de estar activo al avanzar a otras secciones.
-const overviewSectionMap: Record<string, string> = {
-  '/blocks/data-tables': '#dt-overview',
-  '/blocks/charts': '#charts-overview',
-}
+const overviewSectionMap: Record<string, string> = {}
 
 export function SidebarNav({ items }: SidebarNavProps) {
   const pathname = usePathname()
@@ -23,6 +20,7 @@ export function SidebarNav({ items }: SidebarNavProps) {
   const activeHashRef = React.useRef(activeHash)
   React.useEffect(()=> { activeHashRef.current = activeHash }, [activeHash])
   const clickLockRef = React.useRef<number | null>(null)
+  const mountedRef = React.useRef(false)
 
   // Recolectar ids (sin #) de secciones en el orden declarado (el orden final se valida por offsetTop luego)
   const linkIds = React.useMemo(() => {
@@ -30,12 +28,8 @@ export function SidebarNav({ items }: SidebarNavProps) {
     items.forEach(group => {
       group.items?.forEach(it => {
         if (!it.href) return
-        const [base, hash] = it.href.split('#')
+        const hash = it.href.split('#')[1]
         if (hash) ids.push(hash)
-        else if (overviewSectionMap[it.href]) {
-          // Insertar el id (sin #) de la sección overview relevante
-            ids.push(overviewSectionMap[it.href].replace('#', ''))
-        }
       })
     })
     return ids
@@ -43,9 +37,9 @@ export function SidebarNav({ items }: SidebarNavProps) {
 
   // Scrollspy secuencial estable
   React.useEffect(() => {
-    if (!linkIds.length) return
+    mountedRef.current = true
+    if (!linkIds.length) return () => { mountedRef.current = false }
     const headerOffset = 96
-    let isMounted = true
 
     const collectElements = () => (
       linkIds
@@ -54,9 +48,12 @@ export function SidebarNav({ items }: SidebarNavProps) {
     ).sort((a, b) => a.el.offsetTop - b.el.offsetTop)
 
     let elements = collectElements()
+    let retryCount = 0
+    const maxRetries = 30 // ~3s si intervalo 100ms
+    let retryTimer: number | null = null
 
     const computeActive = () => {
-      if (!isMounted) return
+      if (!mountedRef.current) return
       if (clickLockRef.current && Date.now() < clickLockRef.current) return
       if (elements.length !== linkIds.length) elements = collectElements()
       if (!elements.length) return
@@ -70,12 +67,31 @@ export function SidebarNav({ items }: SidebarNavProps) {
       if (targetHash !== activeHashRef.current) setActiveHash(targetHash)
     }
 
+    const ensureElements = () => {
+      if (!mountedRef.current) return
+      elements = collectElements()
+      if (elements.length === linkIds.length || retryCount >= maxRetries) {
+        computeActive()
+        return
+      }
+      retryCount++
+      retryTimer = window.setTimeout(ensureElements, 100)
+    }
+
     const onScroll = () => requestAnimationFrame(computeActive)
     window.addEventListener('scroll', onScroll, { passive: true })
-    computeActive()
+    // Hash inicial (carga directa con #...)
+    if (window.location.hash) {
+      const h = window.location.hash
+      // Si el elemento existe, marcamos directo; si no, se hará en ensureElements
+      if (document.getElementById(h.replace('#',''))) setActiveHash(h)
+    }
+    ensureElements()
+
     return () => {
-      isMounted = false
+      mountedRef.current = false
       window.removeEventListener('scroll', onScroll)
+      if (retryTimer) window.clearTimeout(retryTimer)
     }
   }, [linkIds])
 
@@ -140,19 +156,9 @@ function SidebarNavItems({ items, pathname, activeHash, onNavClick }: SidebarNav
           )
         }
 
-        const [base, hash] = item.href.split('#')
-        const hashWithHash = hash ? '#' + hash : null
-        const expectedOverviewHash = overviewSectionMap[item.href]
-
-        let isActive = false
-        if (hashWithHash) {
-          // Link con hash: activo si coincide exactamente.
-          isActive = activeHash === hashWithHash
-        } else if (pathname === item.href) {
-          // Link overview sin hash: activo sólo mientras no hemos pasado a otra sección distinta.
-          if (!activeHash) isActive = true
-          else if (expectedOverviewHash && activeHash === expectedOverviewHash) isActive = true
-        }
+  const [base, hash] = item.href.split('#')
+  const hashWithHash = hash ? '#' + hash : null
+  const isActive = !!hashWithHash && activeHash === hashWithHash
 
         return (
           <Link
