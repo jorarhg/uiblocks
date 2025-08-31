@@ -23,7 +23,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Components",
-      href: "/components",
+  href: "/docs",
     },
   ],
   sidebarNav: [

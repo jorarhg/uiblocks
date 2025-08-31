@@ -1,41 +1,23 @@
 import Link from "next/link"
-import { ArrowRight, Blocks, Database, FormInput, Navigation, Layout } from "lucide-react"
+import { ArrowRight, Blocks } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-const blockCategories = [
-  {
-    icon: Database,
-    title: "Data & Tables",
-    description: "Componentes avanzados para mostrar y manipular datos tabulares.",
-    href: "/blocks/data-tables",
-    blocks: ["DataTable", "Advanced Filters", "Dynamic Schema"]
-  },
-  {
-    icon: FormInput,
-    title: "Forms & Inputs",
-    description: "Formularios inteligentes y campos de entrada personalizados.",
-    href: "/blocks/forms",
-    blocks: ["Smart Forms", "Validation", "Multi-step Forms"],
-    comingSoon: true
-  },
-  {
-    icon: Navigation,
-    title: "Navigation",
-    description: "Componentes de navegación y menús responsivos.",
-    href: "/blocks/navigation", 
-    blocks: ["Sidebar", "Breadcrumbs", "Menu Systems"],
-    comingSoon: true
-  },
-  {
-    icon: Layout,
-    title: "Layout",
-    description: "Layouts y contenedores para estructurar aplicaciones.",
-    href: "/blocks/layout",
-    blocks: ["Dashboard", "Grid Systems", "Responsive Layouts"],
-    comingSoon: true
-  },
+// Lista resumida de componentes (migrada desde /components)
+const componentsList = [
+  { id:'button', name:'Button', href:'/components/button', description:'Variantes y tamaños', category:'Inputs' },
+  { id:'input', name:'Input', href:'/components/input', description:'Campos de texto', category:'Inputs' },
+  { id:'select', name:'Select', href:'/components/select', description:'Lista desplegable', category:'Inputs' },
+  { id:'checkbox', name:'Checkbox', href:'/components/checkbox', description:'Casillas de verificación', category:'Inputs' },
+  { id:'radio', name:'Radio Group', href:'/components/radio-group', description:'Selección única', category:'Inputs' },
+  { id:'switch', name:'Switch', href:'/components/switch', description:'Toggle accesible', category:'Inputs' },
+  { id:'badge', name:'Badge', href:'/components/badge', description:'Etiquetas de estado', category:'Display' },
+  { id:'card', name:'Card', href:'/components/card', description:'Contenedor header/body', category:'Layout' },
+  { id:'tabs', name:'Tabs', href:'/components/tabs', description:'Navegación segmentada', category:'Navigation' },
+  { id:'dialog', name:'Dialog', href:'/components/dialog', description:'Modales accesibles', category:'Overlay' },
+  { id:'dropdown-menu', name:'Dropdown', href:'/components/dropdown-menu', description:'Menús contextuales', category:'Navigation' },
+  { id:'tooltip', name:'Tooltip', href:'/components/tooltip', description:'Ayuda contextual', category:'Overlay' },
 ]
 
 export default function HomePage() {
@@ -75,50 +57,22 @@ export default function HomePage() {
             </Button>
           </div>
 
-          {/* Block Categories */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 max-w-4xl mx-auto">
-            {blockCategories.map((category, index) => (
-              <Card key={index} className={`border-border/50 hover:shadow-lg transition-shadow ${category.comingSoon ? 'opacity-75' : ''}`}>
-                <CardHeader className="text-center pb-4">
-                  <div className="mx-auto w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                    <category.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle className="text-lg flex items-center justify-center gap-2">
-                    {category.title}
-                    {category.comingSoon && (
-                      <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                        Coming Soon
-                      </span>
-                    )}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <CardDescription className="mb-4">
-                    {category.description}
-                  </CardDescription>
-                  <div className="flex flex-wrap gap-1 justify-center mb-4">
-                    {category.blocks.map((block, blockIndex) => (
-                      <span 
-                        key={blockIndex}
-                        className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded"
-                      >
-                        {block}
-                      </span>
-                    ))}
-                  </div>
-                  <Button 
-                    asChild 
-                    variant={category.comingSoon ? "secondary" : "outline"} 
-                    className="w-full"
-                    disabled={category.comingSoon}
-                  >
-                    <Link href={category.comingSoon ? "#" : category.href}>
-                      {category.comingSoon ? "Coming Soon" : "View Blocks"}
-                      {!category.comingSoon && <ArrowRight className="ml-2 h-4 w-4" />}
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
+          {/* Components Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {componentsList.map(c => (
+              <Link key={c.id} href={c.href} className="group relative rounded-xl border p-5 bg-gradient-to-b from-background to-muted/40 hover:shadow-sm transition flex flex-col">
+                <div className="mb-4 h-28 w-full rounded-md bg-linear-to-br from-muted/80 to-muted/40 flex items-center justify-center text-[10px] text-muted-foreground font-mono tracking-wide">
+                  {c.name}
+                </div>
+                <div className="space-y-1">
+                  <h2 className="font-medium tracking-tight group-hover:text-foreground flex items-center gap-2">
+                    {c.name}
+                    <span className="text-[9px] font-medium rounded border px-1.5 py-0.5 text-muted-foreground group-hover:border-foreground/40">THEMABLE</span>
+                  </h2>
+                  <p className="text-[11px] leading-relaxed text-muted-foreground">{c.description}</p>
+                </div>
+                <span className="absolute inset-0 rounded-xl ring-0 ring-primary/0 group-hover:ring-2 group-hover:ring-primary/30 transition pointer-events-none" />
+              </Link>
             ))}
           </div>
         </div>

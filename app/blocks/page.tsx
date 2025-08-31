@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Database, Table as TableIcon, Filter, Code2, LayoutTemplate, Layers, ChevronRight, ExternalLink, MonitorSmartphone, Copy, Check } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { CodeBlock } from '@/components/docs/code-block'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -564,59 +565,4 @@ function BlockCard({ block }: { block: BlockMeta }){
   )
 }
 
-function CodeBlock({ code, minHeight, lang }: { code:string; minHeight?: number; lang?: string }){
-  const [html, setHtml] = React.useState<string | null>(null)
-  const [copied, setCopied] = React.useState(false)
-  React.useEffect(()=>{
-    let mounted = true
-    ;(async()=>{
-      try {
-        const { codeToHtml } = await import('shiki')
-    const out = await codeToHtml(code, { lang: lang || detectLang(code), theme: 'github-dark' })
-        if(mounted) setHtml(out)
-      } catch (e){ if(mounted) setHtml('') }
-    })()
-    return ()=>{ mounted = false }
-  }, [code, lang])
-
-  function handleCopy(){
-    navigator.clipboard.writeText(code).then(()=>{
-      setCopied(true)
-      setTimeout(()=> setCopied(false), 1800)
-    })
-  }
-
-  const headerH = 36 // h-9
-  const targetMin = Math.max(minHeight || 0, 220)
-  return (
-    <div className='relative w-full text-[11px] font-mono text-neutral-200' style={{ minHeight: targetMin, height: targetMin }}>
-      <div className='absolute inset-x-0 top-0 h-9 flex items-center justify-between px-3 border-b border-white/10 bg-gradient-to-r from-zinc-900/95 to-zinc-900/60 backdrop-blur-sm text-[10px] uppercase tracking-wide'>
-        <span className='text-neutral-400'>Code Snippet</span>
-        <button onClick={handleCopy} className='inline-flex items-center gap-1 rounded-md px-2 py-1 text-neutral-300 hover:text-white hover:bg-white/10 transition text-[11px]'>
-          {copied ? <><Check className='h-3.5 w-3.5 text-emerald-400' /><span>Copiado</span></> : <><Copy className='h-3.5 w-3.5' /><span>Copiar</span></>}
-        </button>
-      </div>
-      <div className='absolute inset-x-0 bottom-0 overflow-auto [&_pre]:!bg-transparent [&_code]:!bg-transparent p-3 md:p-4 leading-relaxed' style={{ top: headerH }}>
-        {!html && html !== '' && (
-          <pre className='animate-pulse text-neutral-500'><code>Cargando resaltado…</code></pre>
-        )}
-        {html === '' && (
-          <pre className='whitespace-pre-wrap'><code>{code}</code></pre>
-        )}
-        {html && html !== '' && (
-          <div
-            className='shiki-wrapper [&_pre]:p-0 [&_code_span]:leading-relaxed'
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-        )}
-      </div>
-    </div>
-  )
-}
-
-function detectLang(src:string){
-  if(/<\/?(div|span|h[1-6]|p)/.test(src)) return 'html'
-  if(src.includes('function ') || src.includes('const ') || src.includes('=>')) return 'tsx'
-  if(src.trim().startsWith('{') || src.includes(':')) return 'ts'
-  return 'tsx'
-}
+// CodeBlock reutiliza componente global con shiki

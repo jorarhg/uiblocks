@@ -1,49 +1,55 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Check, Copy } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-interface CodeBlockProps {
-  language: string
-  code: string
-  className?: string
-}
+interface CodeBlockProps { language: string; code: string; className?: string; wrap?: boolean }
 
-export function CodeBlock({ language, code, className }: CodeBlockProps) {
+export function CodeBlock({ language, code, className, wrap=false }: CodeBlockProps) {
   const [copied, setCopied] = useState(false)
+  const [html, setHtml] = useState<string | null>(null)
+
+  useEffect(()=>{
+    let active = true
+    ;(async()=>{
+      try {
+        const { codeToHtml } = await import('shiki')
+        const out = await codeToHtml(code, { lang: language || 'tsx', theme: 'github-dark' })
+        if(active) setHtml(out)
+      } catch {
+        if(active) setHtml('')
+      }
+    })()
+    return ()=>{ active = false }
+  }, [code, language])
 
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(code)
     setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    setTimeout(() => setCopied(false), 1800)
   }
 
   return (
-    <div className={cn("relative", className)}>
-      <div className="flex items-center justify-between rounded-t-lg bg-muted px-4 py-2">
-        <span className="text-sm font-medium text-muted-foreground">
-          {language}
-        </span>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={copyToClipboard}
-          className="h-6 w-6 p-0"
-        >
-          {copied ? (
-            <Check className="h-3 w-3" />
-          ) : (
-            <Copy className="h-3 w-3" />
-          )}
-          <span className="sr-only">Copy code</span>
+    <div className={cn("relative border rounded-lg overflow-hidden bg-black/95", className)}>
+      <div className="flex items-center justify-between h-9 px-4 border-b border-white/10 bg-gradient-to-r from-zinc-900/90 to-zinc-900/60 backdrop-blur text-[11px] uppercase tracking-wide">
+        <span className="text-neutral-400">{language}</span>
+        <Button variant="ghost" size="sm" onClick={copyToClipboard} className="h-7 px-2 text-neutral-300 hover:text-white">
+          {copied ? <><Check className="h-3.5 w-3.5 text-emerald-400" /><span className="ml-1">Copiado</span></> : <><Copy className="h-3.5 w-3.5" /><span className="ml-1">Copiar</span></>}
         </Button>
       </div>
-      <pre className="overflow-x-auto rounded-b-lg bg-muted/50 p-4">
-        <code className="text-sm">{code}</code>
-      </pre>
+      <div className={cn("p-4 text-xs leading-relaxed overflow-auto", wrap && '[&_code]:whitespace-pre-wrap')}>        
+        {html === null && (
+          <pre className="animate-pulse text-neutral-500"><code>Cargando…</code></pre>
+        )}
+        {html === '' && (
+          <pre><code>{code}</code></pre>
+        )}
+        {html && html !== '' && (
+          <div className='shiki-wrapper [&_pre]:p-0 [&_code_span]:leading-relaxed' dangerouslySetInnerHTML={{ __html: html }} />
+        )}
+      </div>
     </div>
   )
 }
