@@ -10,21 +10,20 @@ export const blocksConfig: BlocksConfig = {
     {
       title: 'Datatables',
       items: [
-  { title: 'Overview', href: '#tables' },
-  { title: 'Basic', href: '/blocks/data-tables/basic' },
-  { title: 'Con Filtros', href: '/blocks/data-tables/filtros' },
-  { title: 'Placeholder', href: '/blocks/data-tables/placeholder' },
-  { title: 'Reordenar', href: '/blocks/data-tables/reordenar' },
-  { title: 'Agrupación', href: '/blocks/data-tables/agrupacion' },
+  { title: 'Basic DataTable', href: '/blocks/data-tables#dt-basico' },
+  { title: 'Con Filtros', href: '/blocks/data-tables#dt-filtros' },
+  { title: 'Placeholder', href: '/blocks/data-tables#dt-placeholder' },
+  { title: 'Reordenar', href: '/blocks/data-tables#dt-reordenar' },
+  { title: 'Agrupación', href: '/blocks/data-tables#dt-agrupacion' },
       ],
     },
     {
       title: 'Gráficas',
       items: [
-  { title: 'Overview', href: '#charts' },
-  { title: 'Line Charts', href: '/blocks/charts/line' },
-  { title: 'Bar Charts', href: '/blocks/charts/bar' },
-  { title: 'Heatmap', href: '/blocks/charts/heatmap' },
+  { title: 'Line Charts', href: '/blocks/charts#charts-lines' },
+  { title: 'Bar / Área', href: '/blocks/charts#charts-bars' },
+  { title: 'Distribución', href: '/blocks/charts#charts-distribucion' },
+  { title: 'Heatmaps', href: '/blocks/charts#charts-heatmaps' },
       ],
     },
     {

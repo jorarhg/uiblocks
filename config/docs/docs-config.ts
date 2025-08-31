@@ -30,111 +30,28 @@ export const docsConfig: DocsConfig = {
     {
       title: "Getting Started",
       items: [
-        {
-          title: "Introduction",
-          href: "/docs",
-        },
-        {
-          title: "Installation",
-          href: "/docs/installation",
-        },
-        {
-          title: "Quick Start",
-          href: "/docs/quick-start",
-        },
-        {
-          title: "Architecture",
-          href: "/docs/architecture",
-        },
-        {
-          title: "Contributing",
-          href: "/docs/contributing",
-        },
+        { title: "Introduction", href: "/docs" },
+        { title: "Installation", href: "/docs/installation" },
+        { title: "Quick Start", href: "/docs/quick-start" },
+        { title: "Architecture", href: "/docs/architecture", disabled: true },
+        { title: "Contributing", href: "/docs/contributing", disabled: true },
       ],
     },
     {
-      title: "Data & Tables",
+      title: "UI Components",
       items: [
-        {
-          title: "Overview",
-          href: "/blocks/data-tables",
-        },
-        {
-          title: "Basic DataTable",
-          href: "/blocks/data-tables/basic-datatable",
-        },
-        {
-          title: "Advanced DataTable",
-          href: "/blocks/data-tables/advanced-datatable",
-        },
-        {
-          title: "Dynamic Filters",
-          href: "/blocks/data-tables/dynamic-filters",
-        },
-        {
-          title: "Custom Formatters",
-          href: "/blocks/data-tables/formatters",
-        },
-      ],
-    },
-    {
-      title: "Forms & Inputs",
-      items: [
-        {
-          title: "Overview",
-          href: "/blocks/forms",
-          disabled: true,
-        },
-        {
-          title: "Smart Forms",
-          href: "/blocks/forms/smart-forms",
-          disabled: true,
-        },
-        {
-          title: "Validation System",
-          href: "/blocks/forms/validation",
-          disabled: true,
-        },
-      ],
-    },
-    {
-      title: "Navigation",
-      items: [
-        {
-          title: "Overview",
-          href: "/blocks/navigation",
-          disabled: true,
-        },
-        {
-          title: "Sidebar",
-          href: "/blocks/navigation/sidebar",
-          disabled: true,
-        },
-        {
-          title: "Breadcrumbs",
-          href: "/blocks/navigation/breadcrumbs",
-          disabled: true,
-        },
-      ],
-    },
-    {
-      title: "Layout",
-      items: [
-        {
-          title: "Overview",
-          href: "/blocks/layout",
-          disabled: true,
-        },
-        {
-          title: "Dashboard",
-          href: "/blocks/layout/dashboard",
-          disabled: true,
-        },
-        {
-          title: "Grid Systems",
-          href: "/blocks/layout/grid",
-          disabled: true,
-        },
+        { title: 'Button', href: '/docs/components/button' },
+        { title: 'Input', href: '/docs/components/input' },
+        { title: 'Select', href: '/docs/components/select' },
+        { title: 'Checkbox', href: '/docs/components/checkbox', disabled: true },
+        { title: 'Radio Group', href: '/docs/components/radio-group', disabled: true },
+        { title: 'Switch', href: '/docs/components/switch', disabled: true },
+        { title: 'Badge', href: '/docs/components/badge', disabled: true },
+        { title: 'Card', href: '/docs/components/card', disabled: true },
+        { title: 'Tabs', href: '/docs/components/tabs', disabled: true },
+        { title: 'Dialog', href: '/docs/components/dialog', disabled: true },
+        { title: 'Dropdown Menu', href: '/docs/components/dropdown-menu', disabled: true },
+        { title: 'Tooltip', href: '/docs/components/tooltip', disabled: true },
       ],
     },
   ],

@@ -6,18 +6,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 // Lista resumida de componentes (migrada desde /components)
 const componentsList = [
-  { id:'button', name:'Button', href:'/components/button', description:'Variantes y tamaños', category:'Inputs' },
-  { id:'input', name:'Input', href:'/components/input', description:'Campos de texto', category:'Inputs' },
-  { id:'select', name:'Select', href:'/components/select', description:'Lista desplegable', category:'Inputs' },
-  { id:'checkbox', name:'Checkbox', href:'/components/checkbox', description:'Casillas de verificación', category:'Inputs' },
-  { id:'radio', name:'Radio Group', href:'/components/radio-group', description:'Selección única', category:'Inputs' },
-  { id:'switch', name:'Switch', href:'/components/switch', description:'Toggle accesible', category:'Inputs' },
-  { id:'badge', name:'Badge', href:'/components/badge', description:'Etiquetas de estado', category:'Display' },
-  { id:'card', name:'Card', href:'/components/card', description:'Contenedor header/body', category:'Layout' },
-  { id:'tabs', name:'Tabs', href:'/components/tabs', description:'Navegación segmentada', category:'Navigation' },
-  { id:'dialog', name:'Dialog', href:'/components/dialog', description:'Modales accesibles', category:'Overlay' },
-  { id:'dropdown-menu', name:'Dropdown', href:'/components/dropdown-menu', description:'Menús contextuales', category:'Navigation' },
-  { id:'tooltip', name:'Tooltip', href:'/components/tooltip', description:'Ayuda contextual', category:'Overlay' },
+  { id:'button', name:'Button', href:'/docs/components/button', description:'Variantes y tamaños', category:'Inputs' },
+  { id:'input', name:'Input', href:'/docs/components/input', description:'Campos de texto', category:'Inputs' },
+  { id:'select', name:'Select', href:'/docs/components/select', description:'Lista desplegable', category:'Inputs' },
+  { id:'checkbox', name:'Checkbox', href:'/docs/components/checkbox', description:'Casillas de verificación', category:'Inputs' },
+  { id:'radio', name:'Radio Group', href:'/docs/components/radio-group', description:'Selección única', category:'Inputs' },
+  { id:'switch', name:'Switch', href:'/docs/components/switch', description:'Toggle accesible', category:'Inputs' },
+  { id:'badge', name:'Badge', href:'/docs/components/badge', description:'Etiquetas de estado', category:'Display' },
+  { id:'card', name:'Card', href:'/docs/components/card', description:'Contenedor header/body', category:'Layout' },
+  { id:'tabs', name:'Tabs', href:'/docs/components/tabs', description:'Navegación segmentada', category:'Navigation' },
+  { id:'dialog', name:'Dialog', href:'/docs/components/dialog', description:'Modales accesibles', category:'Overlay' },
+  { id:'dropdown-menu', name:'Dropdown', href:'/docs/components/dropdown-menu', description:'Menús contextuales', category:'Navigation' },
+  { id:'tooltip', name:'Tooltip', href:'/docs/components/tooltip', description:'Ayuda contextual', category:'Overlay' },
 ]
 
 export default function HomePage() {
