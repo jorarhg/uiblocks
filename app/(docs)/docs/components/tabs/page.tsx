@@ -2,8 +2,8 @@
 import { DocExample } from '@/components/docs/doc-example'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { PropsTable } from '@/components/docs/props-table'
-import { Home, Settings, Bell, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useState, useRef, useEffect } from 'react'
+import { Home, Settings, Bell } from 'lucide-react'
+import { CollapsibleSidebarTabs } from '@/components/ui/collapsible-sidebar-tabs'
 import { cn } from '@/lib/utils'
 
 export default function TabsComponentDoc(){
@@ -205,61 +205,18 @@ export function Demo(){
       />
 
       <DocExample
-        title='Colapsable (sidebar mini)'
-        description='Barra vertical que colapsa a sólo íconos y expande con un toggle.'
-        preview={<CollapsibleTabsDemo />}
-        code={`function CollapsibleTabsDemo(){
-  const BASE_WIDTH = 224
-  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.35)
-  const MIN_WIDTH = 54
-  const [collapsed,setCollapsed]=useState(false) // inicia expandido
-  const [width,setWidth]=useState(BASE_WIDTH)
-  const [isResizing,setIsResizing]=useState(false)
-  const startXRef=useRef(0); const startWRef=useRef(BASE_WIDTH)
-  const title='Secciones'
-  const iconWrapper='flex items-center justify-center rounded-md border border-border/60 h-9 w-9 p-1 shrink-0'
-  const iconSize='h-[18px] w-[18px]'
-  useEffect(()=>{function onMove(e:MouseEvent){if(!isResizing) return; const delta=e.clientX-startXRef.current; const next=Math.min(Math.max(BASE_WIDTH,startWRef.current+delta),MAX_WIDTH); setWidth(next)} function onUp(){setIsResizing(false)} window.addEventListener('mousemove',onMove); window.addEventListener('mouseup',onUp); return()=>{window.removeEventListener('mousemove',onMove);window.removeEventListener('mouseup',onUp)}},[isResizing])
-  const startResize=(e:React.MouseEvent)=>{startXRef.current=e.clientX; startWRef.current=width; setIsResizing(true)}
-  return (<Tabs defaultValue='home' orientation='vertical' className='flex w-full max-w-3xl rounded-md border overflow-hidden select-none'>
-    <div className={cn('relative flex flex-col border-r transition-[width] duration-200 ease-in-out', isResizing && 'transition-none')} style={{ width: collapsed ? MIN_WIDTH : width }}>
-  <div className={cn('flex items-center h-11 border-b px-2', collapsed ? 'justify-start' : 'justify-between')}>
-        {!collapsed && <span className='text-xs font-medium tracking-wide uppercase text-muted-foreground transition-opacity'>{title}</span>}
-        <button onClick={()=>setCollapsed(c=>!c)} aria-label={collapsed?'Expandir barra':'Colapsar barra'} className='flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-          <span className={iconWrapper}>{collapsed ? <ChevronRight className={iconSize} /> : <ChevronLeft className={iconSize} />}</span>
-        </button>
-      </div>
-      <TabsList variant='ghost' className='flex-1 py-2 px-1 data-[orientation=vertical]:p-0 overflow-y-auto'>
-  <TabsTrigger value='home' variant='icon' className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
-          <span className={iconWrapper}><Home className={iconSize} /></span>
-          <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>Home</span>
-        </TabsTrigger>
-  <TabsTrigger value='alerts' variant='icon' className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
-          <span className={iconWrapper}><Bell className={iconSize} /></span>
-          <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>Alertas</span>
-        </TabsTrigger>
-  <TabsTrigger value='settings' variant='icon' className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
-          <span className={iconWrapper}><Settings className={iconSize} /></span>
-          <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>Ajustes</span>
-        </TabsTrigger>
-      </TabsList>
-      {!collapsed && <div onMouseDown={startResize} className={cn('absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90', isResizing && 'bg-border/70')} />}
-    </div>
-    <div className='flex-1'>
-      <TabsContent value='home' className='p-6'>Panel principal</TabsContent>
-      <TabsContent value='alerts' className='p-6'>Listado de alertas</TabsContent>
-      <TabsContent value='settings' className='p-6'>Preferencias del usuario</TabsContent>
-    </div>
-  </Tabs>)
-}`}
+          title='Colapsable (sidebar mini)'
+          description='Barra vertical que colapsa a sólo íconos y expande con un toggle.'
+          preview={<CollapsibleTabsDemo />}
+          code={`<CollapsibleSidebarTabs variant='icon' items={[{value:'home',label:'Home',icon:<Home className='h-5 w-5'/>},{value:'alerts',label:'Alertas',icon:<Bell className='h-5 w-5'/>},{value:'settings',label:'Ajustes',icon:<Settings className='h-5 w-5'/>}]} />`}
         variant='panel'
       />
 
       <DocExample
-        title='Vertical numérica colapsable'
-        description='Secciones numeradas que expanden sub-tabs.'
-        preview={<CollapsibleNumberTabsDemo />}
-  code={`function CollapsibleNumberTabsDemo(){\n  const BASE_WIDTH=224; const MAX_WIDTH=Math.round(BASE_WIDTH*1.35); const MIN_WIDTH=54;\n  const [collapsed,setCollapsed]=useState(false); const [width,setWidth]=useState(BASE_WIDTH); const [isResizing,setIsResizing]=useState(false);\n  const startX=useRef(0); const startW=useRef(BASE_WIDTH);\n  useEffect(()=>{function onMove(e){ if(!isResizing) return; const delta=e.clientX-startX.current; const next=Math.min(Math.max(BASE_WIDTH,startW.current+delta),MAX_WIDTH); setWidth(next)} function onUp(){setIsResizing(false)} window.addEventListener('mousemove',onMove); window.addEventListener('mouseup',onUp); return()=>{window.removeEventListener('mousemove',onMove);window.removeEventListener('mouseup',onUp)}},[isResizing]);\n  const startResize=(e)=>{startX.current=e.clientX; startW.current=width; setIsResizing(true)};\n  const iconWrapper='flex items-center justify-center rounded-md border border-border/60 h-9 w-9 p-1 shrink-0';\n  return (<Tabs defaultValue='one' orientation='vertical' className='flex w-full max-w-3xl rounded-md border overflow-hidden select-none'>\n    <div className={'relative flex flex-col border-r transition-[width] duration-200 ease-in-out '+(isResizing?'transition-none':'')} style={{width:collapsed?MIN_WIDTH:width}}>\n      <div className={'flex items-center h-11 border-b px-2 '+(collapsed?'justify-start':'justify-between')}>\n        {!collapsed && <span className='text-xs font-medium tracking-wide uppercase text-muted-foreground'>Secciones</span>}\n        <button onClick={()=>setCollapsed(c=>!c)} aria-label={collapsed?'Expandir barra':'Colapsar barra'} className='flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>\n          <span className={iconWrapper}>{collapsed ? <ChevronRight className='h-[18px] w-[18px]'/> : <ChevronLeft className='h-[18px] w-[18px]'/>}</span>\n        </button>\n      </div>\n      <TabsList variant='ghost' className='flex-1 py-2 px-1 data-[orientation=vertical]:p-0 overflow-y-auto'>\n        {['one','two','three'].map((v,i)=>(\n          <TabsTrigger key={v} value={v} variant='number' className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>\n            <span className={iconWrapper} aria-hidden>{i+1}</span>\n            <span className={'text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out '+(collapsed?'opacity-0 max-w-0 pointer-events-none':'opacity-100 max-w-[140px]')}>Tab {i+1}</span>\n          </TabsTrigger>))}\n      </TabsList>\n      {!collapsed && <div onMouseDown={startResize} className={'absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90 '+(isResizing?'bg-border/70':'')} /> }\n    </div>\n    <div className='flex-1'>\n      <TabsContent value='one' className='p-6'>Contenido 1</TabsContent>\n      <TabsContent value='two' className='p-6'>Contenido 2</TabsContent>\n      <TabsContent value='three' className='p-6'>Contenido 3</TabsContent>\n    </div>\n  </Tabs>)\n}`}
+          title='Vertical numérica colapsable'
+          description='Secciones numeradas que expanden sub-tabs.'
+          preview={<CollapsibleNumberTabsDemo />}
+          code={`<CollapsibleSidebarTabs variant='number' items={[{value:'one',label:'Tab 1'},{value:'two',label:'Tab 2'},{value:'three',label:'Tab 3'}]} />`}
         variant='panel'
       />
 
@@ -276,85 +233,17 @@ export function Demo(){
 }
 
 function CollapsibleTabsDemo(){
-  const BASE_WIDTH = 224
-  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.35)
-  const MIN_WIDTH = 54
-  const [collapsed,setCollapsed]=useState(false) // inicia expandido
-  const [width,setWidth]=useState(BASE_WIDTH)
-  const [isResizing,setIsResizing]=useState(false)
-  const startXRef=useRef(0); const startWRef=useRef(BASE_WIDTH)
-  const title='Secciones'
-  const iconWrapper='flex items-center justify-center rounded-md border border-border/60 h-9 w-9 p-1 shrink-0'
-  const iconSize='h-[18px] w-[18px]'
-  useEffect(()=>{function onMove(e:MouseEvent){if(!isResizing) return; const delta=e.clientX-startXRef.current; const next=Math.min(Math.max(BASE_WIDTH,startWRef.current+delta),MAX_WIDTH); setWidth(next)} function onUp(){setIsResizing(false)} window.addEventListener('mousemove',onMove); window.addEventListener('mouseup',onUp); return()=>{window.removeEventListener('mousemove',onMove);window.removeEventListener('mouseup',onUp)}},[isResizing])
-  const startResize=(e:React.MouseEvent)=>{startXRef.current=e.clientX; startWRef.current=width; setIsResizing(true)}
-  return (<Tabs defaultValue='home' orientation='vertical' className='flex w-full max-w-3xl rounded-md border overflow-hidden select-none'>
-    <div className={cn('relative flex flex-col border-r transition-[width] duration-200 ease-in-out', isResizing && 'transition-none')} style={{ width: collapsed ? MIN_WIDTH : width }}>
-  <div className={cn('flex items-center h-11 border-b px-2', collapsed ? 'justify-start' : 'justify-between')}>
-        {!collapsed && <span className='text-xs font-medium tracking-wide uppercase text-muted-foreground transition-opacity'>{title}</span>}
-        <button onClick={()=>setCollapsed(c=>!c)} aria-label={collapsed?'Expandir barra':'Colapsar barra'} className='flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-          <span className={iconWrapper}>{collapsed ? <ChevronRight className={iconSize} /> : <ChevronLeft className={iconSize} />}</span>
-        </button>
-      </div>
-      <TabsList variant='ghost' className='flex-1 py-2 px-1 data-[orientation=vertical]:p-0 overflow-y-auto'>
-  <TabsTrigger value='home' variant='icon' className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
-          <span className={iconWrapper}><Home className={iconSize} /></span>
-          <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>Home</span>
-        </TabsTrigger>
-  <TabsTrigger value='alerts' variant='icon' className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
-          <span className={iconWrapper}><Bell className={iconSize} /></span>
-          <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>Alertas</span>
-        </TabsTrigger>
-  <TabsTrigger value='settings' variant='icon' className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
-          <span className={iconWrapper}><Settings className={iconSize} /></span>
-          <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>Ajustes</span>
-        </TabsTrigger>
-      </TabsList>
-      {!collapsed && <div onMouseDown={startResize} className={cn('absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90', isResizing && 'bg-border/70')} />}
-    </div>
-    <div className='flex-1'>
-      <TabsContent value='home' className='p-6'>Panel principal</TabsContent>
-      <TabsContent value='alerts' className='p-6'>Listado de alertas</TabsContent>
-      <TabsContent value='settings' className='p-6'>Preferencias del usuario</TabsContent>
-    </div>
-  </Tabs>)
+  return <CollapsibleSidebarTabs variant='icon' items={[
+    { value:'home', label:'Home', icon:<Home className='h-5 w-5' />, content:'Panel principal' },
+    { value:'alerts', label:'Alertas', icon:<Bell className='h-5 w-5' />, content:'Listado de alertas' },
+    { value:'settings', label:'Ajustes', icon:<Settings className='h-5 w-5' />, content:'Preferencias del usuario' }
+  ]} />
 }
 
 function CollapsibleNumberTabsDemo(){
-  const BASE_WIDTH = 224
-  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.35)
-  const MIN_WIDTH = 54
-  const [collapsed,setCollapsed]=useState(false)
-  const [width,setWidth]=useState(BASE_WIDTH)
-  const [isResizing,setIsResizing]=useState(false)
-  const startXRef=useRef(0); const startWRef=useRef(BASE_WIDTH)
-  useEffect(()=>{function onMove(e:MouseEvent){if(!isResizing) return; const delta=e.clientX-startXRef.current; const next=Math.min(Math.max(BASE_WIDTH,startWRef.current+delta),MAX_WIDTH); setWidth(next)} function onUp(){setIsResizing(false)} window.addEventListener('mousemove',onMove); window.addEventListener('mouseup',onUp); return()=>{window.removeEventListener('mousemove',onMove);window.removeEventListener('mouseup',onUp)}},[isResizing])
-  const startResize=(e:React.MouseEvent)=>{startXRef.current=e.clientX; startWRef.current=width; setIsResizing(true)}
-  const iconWrapper='flex items-center justify-center rounded-md border border-border/60 h-9 w-9 p-1 shrink-0'
-  return (
-    <Tabs defaultValue='one' orientation='vertical' className='flex w-full max-w-3xl rounded-md border overflow-hidden select-none'>
-      <div className={cn('relative flex flex-col border-r transition-[width] duration-200 ease-in-out', isResizing && 'transition-none')} style={{ width: collapsed ? MIN_WIDTH : width }}>
-        <div className={cn('flex items-center h-11 border-b px-2', collapsed ? 'justify-start' : 'justify-between')}>
-          {!collapsed && <span className='text-xs font-medium tracking-wide uppercase text-muted-foreground transition-opacity'>Secciones</span>}
-          <button onClick={()=>setCollapsed(c=>!c)} aria-label={collapsed?'Expandir barra':'Colapsar barra'} className='flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'>
-            <span className={iconWrapper}>{collapsed ? <ChevronRight className='h-[18px] w-[18px]' /> : <ChevronLeft className='h-[18px] w-[18px]' />}</span>
-          </button>
-        </div>
-        <TabsList variant='ghost' className='flex-1 py-2 px-1 data-[orientation=vertical]:p-0 overflow-y-auto'>
-          {['one','two','three'].map((v,i)=>(
-            <TabsTrigger key={v} value={v} variant='number' className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
-              <span className={iconWrapper} aria-hidden>{i+1}</span>
-              <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>Tab {i+1}</span>
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        {!collapsed && <div onMouseDown={startResize} className={cn('absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90', isResizing && 'bg-border/70')} />}
-      </div>
-      <div className='flex-1'>
-        <TabsContent value='one' className='p-6'>Contenido 1</TabsContent>
-        <TabsContent value='two' className='p-6'>Contenido 2</TabsContent>
-        <TabsContent value='three' className='p-6'>Contenido 3</TabsContent>
-      </div>
-    </Tabs>
-  )
+  return <CollapsibleSidebarTabs variant='number' items={[
+    { value:'one', label:'Tab 1' },
+    { value:'two', label:'Tab 2' },
+    { value:'three', label:'Tab 3' }
+  ]} />
 }

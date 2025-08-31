@@ -4995,3 +4995,160 @@ Listo: variante number = icon (mismo layout), demos actualizados y sin errores. 
 
 ---
 
+_**User**_
+
+has el commit ahora
+
+---
+
+_**Assistant**_
+
+Ejecuto el commit de los archivos modificados para cerrar la unificación solicitada. 
+
+---
+
+_**User**_
+
+listo ya hice el commit
+
+---
+
+_**Assistant**_
+
+Perfecto. Cambios consolidados. Próximos opcionales:
+- Añadir tooltip para números cuando está colapsado.
+- Actualizar changelog / bump de versión.
+- Test visual rápido en dark mode.
+
+¿Sigo con alguno?
+
+---
+
+_**User**_
+
+estas variables   const BASE_WIDTH=224; const MAX_WIDTH=Math.round(BASE_WIDTH*1.35); const MIN_WIDTH=54;
+porque no son parametros dentro de la variante del componente?
+
+---
+
+_**Assistant**_
+
+Porque esas constantes no pertenecen a la “variante” visual de TabsTrigger sino al contenedor colapsable (layout). Detalle rápido:
+
+- Las variantes actuales (default/underline/pill/icon/number) sólo controlan clases de estilo del trigger, no lógica de layout ni animación de ancho.
+- BASE_WIDTH/MIN_WIDTH/MAX_WIDTH afectan al wrapper (sidebar) completo, no a cada trigger; incluirlas en la variante acoplaría estilos con lógica de interacción.
+- MAX_WIDTH depende de BASE_WIDTH (cálculo dinámico), algo ajeno al sistema de variantes (que es estático, basado en strings → clases).
+- El ancho animado se aplica vía inline style (width:) porque Tailwind no puede interpolar dinámicamente un valor calculado sin generar clases utilitarias adicionales.
+
+Si quieres parametrizarlo:
+
+1) Extraer a un componente reusable:
+   function CollapsibleTabsSidebar({ baseWidth=224, minWidth=54, maxFactor=1.35, ... }) { ... }
+
+2) O usar props + CSS vars:
+   style={{ '--base-width': `${baseWidth}px` } as React.CSSProperties }
+
+3) O pasar config como objeto:
+   <CollapsibleTabsDemo config={{ base:224, min:54, maxFactor:1.35 }} />
+
+Dime si implemento alguna de estas opciones.
+
+---
+
+_**User**_
+
+yo apunto a algo como esto: O pasar config como objeto: <CollapsibleTabsDemo config={{ base:224, min:54, maxFactor:1.35 }} />
+porque de ese modo dejas preparada la variante a que acepte valores en variables definidas
+
+---
+
+_**Assistant**_
+
+Implemento soporte de prop config en los demos (CollapsibleTabsDemo y Number) y actualizo snippets de documentación. 
+```
+
+```
+Actualizo snippet de CollapsibleNumberTabsDemo para aceptar config prop también. Parcheo snippet para incluir prop config igual que implementación real. 
+```
+
+```
+Verifico errores tras ajustar snippet. Hecho: ambos demos (`CollapsibleTabsDemo` y `CollapsibleNumberTabsDemo`) ahora aceptan prop config { base, min, maxFactor } y los snippets en la documentación también. Valores por defecto se mantienen si no pasas config. ¿Quieres que agregue un ejemplo de uso pasando un config distinto o lo dejamos así?
+
+---
+
+_**User**_
+
+lo que busco es simplificar lo verboso del codigo de implementacion en el snippet, estoy seguro que se puede
+
+---
+
+_**Assistant**_
+
+Creo componente reutilizable y actualizo los demos y snippets para reducir verbosidad. Importo y uso el nuevo componente en los demos para simplificar snippets. Leo archivo actual para aplicar reemplazos específicos con contexto correcto. Leo segunda parte del archivo para localizar secciones a reemplazar sin fallar contexto. Leo final del archivo para reemplazar implementaciones de demos. Aplico patch para: 1) importar CollapsibleSidebarTabs, 2) reemplazar los bloques largos (snippets y componentes finales) con la versión simplificada, 3) acortar code props de DocExample colapsables. 
+```
+
+```
+Aplico patch adicional para agregar definiciones simplificadas de los componentes CollapsibleTabsDemo y CollapsibleNumberTabsDemo y la importación de CollapsibleSidebarTabs. Actualizo el archivo de la página de tabs para reemplazar implementaciones verbosas por versiones simplificadas que usan CollapsibleSidebarTabs y ajusto imports. 
+```
+
+```
+GitHub Copilot
+
+Actualizado el archivo: demos colapsables ahora usan el componente reutilizable y se eliminaron las implementaciones verbosas; sin errores de TypeScript. ¿Algo más que quieras ajustar (export público, tooltips, etc.)?
+
+---
+
+_**User**_
+
+algo que debes confirmarme es, que la simplicidad que busquemos no es para que el codigo del snippet se vea largo, es para que el usuario cuando use la biblioteca tenga una forma simple de implementarla, y que sepa que es lo que obtendra cuando vea el demo
+
+---
+
+_**Assistant**_
+
+Reviso el contenido actual del componente y el índice para preparar export público y posible reubicación. Voy a mover el componente a una ruta pública (components/ui), actualizar export en index y referencias en la página de docs para que el API simple esté disponible al usuario. 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+La simplicidad buscada ahora está reflejada en el API público: el usuario sólo importa y usa <CollapsibleSidebarTabs variant='icon' items=[...]/>. Acciones realizadas:
+
+- Moví el componente a `collapsible-sidebar-tabs.tsx` con comentario explicando su intención de simplicidad.
+- Eliminé la versión interna de docs.
+- Lo exporté en `index.ts` para consumo directo de la librería.
+- Actualicé la página de documentación para usar la nueva ruta pública.
+- Verifiqué que no haya errores de TypeScript.
+
+Resultado: El snippet que el usuario verá coincide exactamente con la forma real de uso (cero lógica adicional oculta) y el nombre comunica claramente qué obtiene: una sidebar colapsable con tabs icon/number configurable vía items y config opcional.
+
+Siguientes mejoras opcionales (si quieres): 
+1. Añadir tooltips automáticos cuando está colapsado para accesibilidad. 
+2. Documentar props en una sección PropsTable (añadir a tus metadatos). 
+3. Añadir prop onCollapseChange para control externo si se requiere. 
+4. Test ligero de render y colapso (RTL).
+
+¿Deseas que implemente alguno de estos ahora?
+
+---
+
+_**User**_
+
+has un commit, luego:
+Añadir tooltips automáticos cuando está colapsado para accesibilidad.
+Documentar props en una sección PropsTable (añadir a tus metadatos).
+
+---
+
+_**Assistant**_
+
+
+
+---
+
