@@ -30,12 +30,18 @@ export interface SimpleColumnConfig<TData> {
   /** habilita ordenamiento (alias sortable) */
   sortable?: boolean
   enableSorting?: boolean
+  /** habilita filtrado básico (usa filterFn includes) */
+  filterable?: boolean
   /** permitir ocultar; por defecto true */
   hideable?: boolean
   /** función para derivar el valor (override de key) */
   accessor?: (row: TData) => any
   /** render personalizado de la celda */
   render?: (value: any, row: TData) => React.ReactNode
+  /** ancho fijo (ej: 120, '10%') */
+  width?: number | string
+  /** alineación del texto */
+  align?: 'left' | 'center' | 'right'
 }
 
 interface DataTableProps<TData, TValue> {
@@ -82,6 +88,10 @@ export function DataTable<TData, TValue>({
         header: cfg.label,
         enableSorting,
         enableHiding: cfg.hideable !== false,
+        meta: {
+          align: cfg.align,
+          width: cfg.width,
+        },
       }
       if (cfg.accessor) {
         ;(col as any).accessorFn = (row: TData) => cfg.accessor!(row)
@@ -92,6 +102,13 @@ export function DataTable<TData, TValue>({
             // valor: si hay accessor se llamará accessorFn; si no, getValue
           const value = cfg.accessor ? cfg.accessor(rowData) : getValue()
           return cfg.render!(value, rowData)
+        }
+      }
+      if (cfg.filterable) {
+        col.filterFn = (row, id, value) => {
+          const cell = row.getValue(id)
+          if (value == null || value === '') return true
+          return String(cell).toLowerCase().includes(String(value).toLowerCase())
         }
       }
       return col
@@ -132,8 +149,12 @@ export function DataTable<TData, TValue>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
+                  const meta: any = header.column.columnDef.meta || {}
+                  const style: React.CSSProperties = {}
+                  if (meta.width) style.width = typeof meta.width === 'number' ? meta.width : meta.width
+                  const alignClass = meta.align === 'center' ? 'text-center' : meta.align === 'right' ? 'text-right' : 'text-left'
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} style={style} className={alignClass}>
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   )
@@ -145,9 +166,17 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                  ))}
+                  {row.getVisibleCells().map((cell) => {
+                    const meta: any = cell.column.columnDef.meta || {}
+                    const style: React.CSSProperties = {}
+                    if (meta.width) style.width = typeof meta.width === 'number' ? meta.width : meta.width
+                    const alignClass = meta.align === 'center' ? 'text-center' : meta.align === 'right' ? 'text-right' : 'text-left'
+                    return (
+                      <TableCell key={cell.id} style={style} className={alignClass}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
               ))
             ) : (

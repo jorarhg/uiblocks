@@ -46,15 +46,15 @@ const data: User[] = [
 
 export default function Example(){
   return (
-    <DataTable
-      simpleColumns={[
-        { key: 'name', label: 'Nombre', sortable: true },
-        { key: 'email', label: 'Correo' },
-        { key: 'role', label: 'Rol', render: (v) => <span className="capitalize">{v}</span> },
-      ]}
-      data={data}
-      searchPlaceholder="Buscar usuario..."
-    />
+      <DataTable
+        simpleColumns={[
+          { key: 'name', label: 'Nombre', sortable: true, filterable: true, width: 160 },
+          { key: 'email', label: 'Correo', filterable: true, align: 'left' },
+          { key: 'role', label: 'Rol', width: 100, align: 'center', render: (v) => <span className="capitalize">{v}</span> },
+        ]}
+        data={data}
+        searchPlaceholder="Buscar usuario..."
+      />
   )
 }`}
           />
