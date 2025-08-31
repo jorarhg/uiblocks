@@ -210,7 +210,7 @@ export function Demo(){
         preview={<CollapsibleTabsDemo />}
         code={`function CollapsibleTabsDemo(){
   const BASE_WIDTH = 224 // px (w-56)
-  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.3) // +30%
+  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.35) // +35%
   const [collapsed,setCollapsed]=useState(true)
   const [width,setWidth]=useState(BASE_WIDTH)
   const resizingRef = useRef(false)
@@ -354,30 +354,36 @@ export function Demo(){
 
 function CollapsibleTabsDemo(){
   const BASE_WIDTH = 224
-  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.3)
+  const MAX_WIDTH = Math.round(BASE_WIDTH * 1.35)
   const [collapsed,setCollapsed]=useState(true)
   const [width,setWidth]=useState(BASE_WIDTH)
-  const resizingRef = useRef(false)
+  const [isResizing,setIsResizing]=useState(false)
+  const startXRef = useRef(0)
+  const startWRef = useRef(BASE_WIDTH)
   const title='Secciones'
   const iconWrapper='flex items-center justify-center rounded-md border border-border/60 h-9 w-9 p-1 shrink-0'
   const iconSize='h-[18px] w-[18px]'
   useEffect(()=>{
     function onMove(e:MouseEvent){
-      if(!resizingRef.current) return
-      setWidth(w=>{
-        const next = w + e.movementX
-        return Math.min(Math.max(BASE_WIDTH, next), MAX_WIDTH)
-      })
+      if(!isResizing) return
+      const delta = e.clientX - startXRef.current
+      const next = Math.min(Math.max(BASE_WIDTH, startWRef.current + delta), MAX_WIDTH)
+      setWidth(next)
     }
-    function onUp(){ resizingRef.current=false }
+    function onUp(){ setIsResizing(false) }
     window.addEventListener('mousemove', onMove)
     window.addEventListener('mouseup', onUp)
     return ()=>{ window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
-  },[])
+  },[isResizing])
+  const startResize = (e:React.MouseEvent)=>{
+    startXRef.current = e.clientX
+    startWRef.current = width
+    setIsResizing(true)
+  }
   return (
-    <Tabs defaultValue='home' orientation='vertical' className='flex w-full max-w-3xl rounded-md border overflow-hidden'>
+    <Tabs defaultValue='home' orientation='vertical' className='flex w-full max-w-3xl rounded-md border overflow-hidden select-none'>
       <div
-        className={cn('relative flex flex-col border-r transition-[width] duration-300', collapsed ? 'w-16' : '')}
+        className={cn('relative flex flex-col border-r', collapsed ? 'w-16' : '', !collapsed && !isResizing && 'transition-[width] duration-200')}
         style={!collapsed ? { width } : undefined}
       >
         <div className='flex items-center justify-between h-11 border-b px-2 select-none'>
@@ -406,8 +412,8 @@ function CollapsibleTabsDemo(){
         </TabsList>
         {!collapsed && (
           <div
-            onMouseDown={()=>{resizingRef.current=true}}
-            className='absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90 transition-colors'
+            onMouseDown={startResize}
+            className={cn('absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90', isResizing && 'bg-border/70')}
           />
         )}
       </div>
