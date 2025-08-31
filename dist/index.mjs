@@ -13,7 +13,7 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { Command as Command$1 } from 'cmdk';
 import { useReactTable, getExpandedRowModel, getGroupedRowModel, getFacetedUniqueValues, getFacetedRowModel, getSortedRowModel, getPaginationRowModel, getFilteredRowModel, getCoreRowModel, flexRender } from '@tanstack/react-table';
 import * as RechartsPrimitive from 'recharts';
-import { LineChart, CartesianGrid, XAxis, YAxis, ReferenceLine, Line, Area, BarChart, Bar, PieChart, Pie, Cell, ScatterChart, ZAxis, Scatter, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Treemap } from 'recharts';
+import { LineChart, CartesianGrid, XAxis, YAxis, ReferenceLine, Line, Area, BarChart, Bar, PieChart, Pie, Cell, ScatterChart, ZAxis, Scatter, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Treemap, RadialBarChart, RadialBar } from 'recharts';
 
 function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -1830,5 +1830,35 @@ const HeatmapChart = ({ data, xKeys, yKeys, height = 320, width, className, colo
   ) });
 };
 
-export { ActionsMenu, Badge, BaseBarChart, BaseLineChart, Button, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandPaletteExample, CommandSeparator, CommandShortcut, DataTable, DataTableFacetedFilter, DataTablePagination, DataTableToolbar, DataTableViewOptions, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DonutChart, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, FORMATTERS, HeatmapChart, Input, LineChartWithReference, MultiLineChart, Popover, PopoverContent, PopoverTrigger, ScatterPointsChart, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue, Separator, SimpleAreaChart, SimpleBarChart, SimpleHeatmap, SimpleLineChart, SimpleRadarChart, StackedBarChart, Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, applyTemplate, badgeVariants, buttonVariants, createActionsColumn, createCustomFormatter, defaultActions, defaultActionsColumnConfig, formatCell };
+const GaugeChart = ({
+  value,
+  maxValue = 100,
+  height = 180,
+  barSize = 18,
+  color,
+  showValue = true,
+  formatValue,
+  label,
+  className
+}) => {
+  const pct = Math.max(0, Math.min(1, value / maxValue));
+  const display = formatValue ? formatValue(value, pct) : `${Math.round(pct * 100)}%`;
+  const data = [{ name: "value", value: pct * 100 }];
+  const thicknessPct = Math.min(40, Math.max(6, barSize));
+  const outerRadius = 100;
+  const innerRadius = outerRadius - thicknessPct;
+  const config = { value: { label: "Valor", color: color || "hsl(var(--primary))" } };
+  return /* @__PURE__ */ jsxs("div", { className, style: { height }, children: [
+    /* @__PURE__ */ jsx(ChartContainer, { config, className: "w-full h-full !aspect-auto", children: /* @__PURE__ */ jsxs(RadialBarChart, { data, startAngle: 180, endAngle: 0, innerRadius: innerRadius + "%", outerRadius: outerRadius + "%", children: [
+      /* @__PURE__ */ jsx(PolarAngleAxis, { type: "number", domain: [0, 100], dataKey: "value", tick: false }),
+      /* @__PURE__ */ jsx(RadialBar, { background: true, dataKey: "value", cornerRadius: thicknessPct, fill: color || "var(--color-value)", stroke: "none", className: "[&_.recharts-radial-bar-background-sector]:fill-muted" })
+    ] }) }),
+    showValue && /* @__PURE__ */ jsxs("div", { className: "-mt-14 flex flex-col items-center pointer-events-none select-none", children: [
+      /* @__PURE__ */ jsx("div", { className: "text-2xl font-semibold tabular-nums leading-none", children: display }),
+      label && /* @__PURE__ */ jsx("div", { className: "text-xs mt-1 text-muted-foreground", children: label })
+    ] })
+  ] });
+};
+
+export { ActionsMenu, Badge, BaseBarChart, BaseLineChart, Button, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandPaletteExample, CommandSeparator, CommandShortcut, DataTable, DataTableFacetedFilter, DataTablePagination, DataTableToolbar, DataTableViewOptions, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DonutChart, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, FORMATTERS, GaugeChart, HeatmapChart, Input, LineChartWithReference, MultiLineChart, Popover, PopoverContent, PopoverTrigger, ScatterPointsChart, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue, Separator, SimpleAreaChart, SimpleBarChart, SimpleHeatmap, SimpleLineChart, SimpleRadarChart, StackedBarChart, Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, applyTemplate, badgeVariants, buttonVariants, createActionsColumn, createCustomFormatter, defaultActions, defaultActionsColumnConfig, formatCell };
 //# sourceMappingURL=index.mjs.map

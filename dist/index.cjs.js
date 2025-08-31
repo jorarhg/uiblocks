@@ -1855,6 +1855,36 @@ const HeatmapChart = ({ data, xKeys, yKeys, height = 320, width, className, colo
   ) });
 };
 
+const GaugeChart = ({
+  value,
+  maxValue = 100,
+  height = 180,
+  barSize = 18,
+  color,
+  showValue = true,
+  formatValue,
+  label,
+  className
+}) => {
+  const pct = Math.max(0, Math.min(1, value / maxValue));
+  const display = formatValue ? formatValue(value, pct) : `${Math.round(pct * 100)}%`;
+  const data = [{ name: "value", value: pct * 100 }];
+  const thicknessPct = Math.min(40, Math.max(6, barSize));
+  const outerRadius = 100;
+  const innerRadius = outerRadius - thicknessPct;
+  const config = { value: { label: "Valor", color: color || "hsl(var(--primary))" } };
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { className, style: { height }, children: [
+    /* @__PURE__ */ jsxRuntime.jsx(ChartContainer, { config, className: "w-full h-full !aspect-auto", children: /* @__PURE__ */ jsxRuntime.jsxs(RechartsPrimitive.RadialBarChart, { data, startAngle: 180, endAngle: 0, innerRadius: innerRadius + "%", outerRadius: outerRadius + "%", children: [
+      /* @__PURE__ */ jsxRuntime.jsx(RechartsPrimitive.PolarAngleAxis, { type: "number", domain: [0, 100], dataKey: "value", tick: false }),
+      /* @__PURE__ */ jsxRuntime.jsx(RechartsPrimitive.RadialBar, { background: true, dataKey: "value", cornerRadius: thicknessPct, fill: color || "var(--color-value)", stroke: "none", className: "[&_.recharts-radial-bar-background-sector]:fill-muted" })
+    ] }) }),
+    showValue && /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "-mt-14 flex flex-col items-center pointer-events-none select-none", children: [
+      /* @__PURE__ */ jsxRuntime.jsx("div", { className: "text-2xl font-semibold tabular-nums leading-none", children: display }),
+      label && /* @__PURE__ */ jsxRuntime.jsx("div", { className: "text-xs mt-1 text-muted-foreground", children: label })
+    ] })
+  ] });
+};
+
 exports.ActionsMenu = ActionsMenu;
 exports.Badge = Badge;
 exports.BaseBarChart = BaseBarChart;
@@ -1902,6 +1932,7 @@ exports.DropdownMenuSubContent = DropdownMenuSubContent;
 exports.DropdownMenuSubTrigger = DropdownMenuSubTrigger;
 exports.DropdownMenuTrigger = DropdownMenuTrigger;
 exports.FORMATTERS = FORMATTERS;
+exports.GaugeChart = GaugeChart;
 exports.HeatmapChart = HeatmapChart;
 exports.Input = Input;
 exports.LineChartWithReference = LineChartWithReference;
