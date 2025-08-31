@@ -73,7 +73,8 @@ const TabsTrigger = React.forwardRef<
     underline: 'rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:text-foreground',
   pill: 'rounded-full data-[state=active]:bg-primary data-[state=active]:text-primary-foreground',
   icon: 'rounded-md size-11 p-0 [&>.tab-label]:sr-only hover:bg-muted/40 data-[state=active]:bg-muted/50 data-[state=active]:text-foreground',
-  number: 'rounded-md min-w-[2.25rem] h-9 px-0 text-sm font-semibold data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+  // La variante 'number' ahora es visualmente idéntica a 'icon'; solo cambia el contenido (número vs icono)
+  number: 'rounded-md size-11 p-0 [&>.tab-label]:sr-only hover:bg-muted/40 data-[state=active]:bg-muted/50 data-[state=active]:text-foreground'
   }[variant]
   return (
     <TabsPrimitive.Trigger
