@@ -152,6 +152,18 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: 'onOpenChange', type: '(open: boolean) => void', event: true, description: 'Cambio de apertura.' },
     ]
   },
+  CollapsibleSidebarTabs: {
+    displayName: 'CollapsibleSidebarTabs',
+    notes: 'Sidebar vertical colapsable con tabs de íconos o numeradas. Incluye resize automático dentro de rango.',
+    props: [
+      { name: 'items', type: 'Array<{ value: string; label: string; icon?: ReactNode; number?: number; content?: ReactNode }>', required: true, description: 'Definición de cada tab y su contenido.' },
+      { name: 'variant', type: `'icon' | 'number'`, required: true, description: 'Modo de representación: íconos o números.' },
+      { name: 'defaultValue', type: 'string', description: 'Valor inicial activo (por defecto el primero de items).' },
+      { name: 'title', type: 'string', default: '"Secciones"', description: 'Título que aparece en el header expandido.' },
+      { name: 'config', type: '{ base?: number; min?: number; maxFactor?: number }', description: 'Ajusta anchos: base (224), min (54), maxFactor (1.35).' },
+      { name: 'className', type: 'string', description: 'Clases extra para el contenedor root.' },
+    ]
+  },
 }
 
 export type ComponentDocKey = keyof typeof COMPONENT_DOCS

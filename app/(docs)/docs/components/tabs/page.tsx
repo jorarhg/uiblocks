@@ -227,6 +227,8 @@ export function Demo(){
         <PropsTable component='TabsList' />
         <h3 className='text-sm font-medium pt-4'>TabsTrigger</h3>
         <PropsTable component='TabsTrigger' />
+  <h3 className='text-sm font-medium pt-4'>CollapsibleSidebarTabs</h3>
+  <PropsTable component='CollapsibleSidebarTabs' />
       </section>
     </div>
   )

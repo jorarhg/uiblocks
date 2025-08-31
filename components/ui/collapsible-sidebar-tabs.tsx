@@ -1,6 +1,7 @@
 "use client"
 import * as React from 'react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
@@ -65,14 +66,28 @@ export function CollapsibleSidebarTabs({ items, defaultValue, title = 'Secciones
           </button>
         </div>
         <TabsList variant='ghost' className='flex-1 py-2 px-1 data-[orientation=vertical]:p-0 overflow-y-auto'>
-          {items.map((it, idx) => (
-            <TabsTrigger key={it.value} value={it.value} variant={variant === 'icon' ? 'icon' : 'number'} className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
-              <span className={iconWrapper} aria-hidden>
-                {variant === 'icon' ? it.icon : (it.number ?? (idx + 1))}
-              </span>
-              <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>{it.label}</span>
-            </TabsTrigger>
-          ))}
+          <TooltipProvider disableHoverableContent>
+            {items.map((it, idx) => {
+              const trigger = (
+                <TabsTrigger key={it.value} value={it.value} variant={variant === 'icon' ? 'icon' : 'number'} className='group w-full px-2 py-2 transition-colors flex items-center justify-start'>
+                  <span className={iconWrapper} aria-hidden>
+                    {variant === 'icon' ? it.icon : (it.number ?? (idx + 1))}
+                  </span>
+                  <span className={cn('text-sm whitespace-nowrap overflow-hidden ml-3 transition-[max-width,opacity] duration-200 ease-in-out', collapsed ? 'opacity-0 max-w-0 pointer-events-none' : 'opacity-100 max-w-[140px]')}>{it.label}</span>
+                </TabsTrigger>
+              )
+              return collapsed ? (
+                <Tooltip key={it.value}>
+                  <TooltipTrigger asChild>
+                    {trigger}
+                  </TooltipTrigger>
+                  <TooltipContent side='right' className='px-2 py-1 text-xs'>
+                    {it.label}
+                  </TooltipContent>
+                </Tooltip>
+              ) : trigger
+            })}
+          </TooltipProvider>
         </TabsList>
         {!collapsed && <div onMouseDown={startResize} className={cn('absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-border/70 active:bg-border/90', isResizing && 'bg-border/70')} />}
       </div>
