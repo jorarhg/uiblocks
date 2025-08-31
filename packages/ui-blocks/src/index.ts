@@ -7,5 +7,6 @@ export * from './data-table'
 export * from './examples/command-palette-example'
 export * from './charts/line-charts'
 export * from './charts/advanced-charts'
+export * from './charts/gauge-chart'
 
 // TODO: agregar documentación de cada export cuando se estabilice

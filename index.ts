@@ -26,6 +26,7 @@ export { getConfigFromJSON, getTableOptionsFromConfig } from "./lib/column-facto
 
 // Charts
 export { BaseLineChart, SimpleLineChart, MultiLineChart, LineChartWithReference } from "./components/charts/line-charts"
+export { GaugeChart } from "./components/charts/gauge-chart"
 
 // Primitivos UI básicos (exportados para coincidir con ejemplos de docs)
 export { Button } from "./components/ui/button"

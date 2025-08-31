@@ -1,5 +1,5 @@
 "use client"
-import { SimpleLineChart, MultiLineChart, LineChartWithReference, SimpleBarChart, StackedBarChart, SimpleAreaChart, DonutChart, ScatterPointsChart, SimpleRadarChart, SimpleHeatmap, HeatmapChart } from '@teribit/ui-blocks'
+import { SimpleLineChart, MultiLineChart, LineChartWithReference, SimpleBarChart, StackedBarChart, SimpleAreaChart, DonutChart, ScatterPointsChart, SimpleRadarChart, SimpleHeatmap, HeatmapChart, GaugeChart } from '@teribit/ui-blocks'
 import { BlockCard, type BlockMeta } from '@/components/blocks/block-card'
 
 // Datos deterministas para payloads consistentes
@@ -35,6 +35,7 @@ const chartBlocks: BlockMeta[] = [
   { id: 'chart-heatmap-treemap', title: 'Heatmap Treemap', category: 'charts', description: 'Treemap intensidades.', preview: <div className='rounded-md'><SimpleHeatmap data={[{ name:'A', value:40 }, { name:'B', value:25 }, { name:'C', value:15 }, { name:'D', value:20 }]} /></div>, code: `<SimpleHeatmap data={data} />`, status: 'beta', tags:['heatmap','treemap'], payload: [{ name:'A', value:40 }, { name:'B', value:25 }, { name:'C', value:15 }, { name:'D', value:20 }] },
   { id: 'chart-heatmap-colored', title: 'Heatmap Colores Custom', category: 'charts', description: 'Gradiente personalizado con stops.', preview: <div className='rounded-md'><HeatmapChart data={heatmapData} baseColor='#6366f1' colorStops={['#eef2ff','#6366f1','#312e81']} title='Patrón de Intensidad' /></div>, code: `<HeatmapChart data={data} baseColor='#6366f1' colorStops={["#eef2ff","#6366f1","#312e81"]} title='Patrón de Intensidad' />`, status: 'beta', tags:['heatmap','gradient'], payload: heatmapData },
   { id: 'chart-heatmap-rect-values', title: 'Heatmap Rect Valores', category: 'charts', description: 'Rectangular con valores visibles.', preview: <div className='rounded-md'><HeatmapChart data={rectValuesData} height={180} gap={0.12} showAxes showCellValues title='Rect Valores' /></div>, code: `<HeatmapChart data={data} height={180} gap={0.12} showAxes showCellValues title='Rect Valores' />`, status: 'beta', tags:['heatmap','rect','values'], payload: rectValuesData },
+  { id: 'chart-gauge', title: 'Gauge', category: 'charts', description: 'Indicador semicircular de progreso/uso.', preview: <div className='rounded-md'><GaugeChart value={72} maxValue={100} label='Uso' /></div>, code: `<GaugeChart value={72} maxValue={100} label='Uso' />`, status: 'beta', tags:['gauge','radial'], payload: [{ value:72, max:100 }] },
 ]
 
 const groups: { title: string; id: string; match: (b: BlockMeta)=> boolean }[] = [
@@ -42,6 +43,7 @@ const groups: { title: string; id: string; match: (b: BlockMeta)=> boolean }[] =
   { title: 'Barras / Área', id: 'charts-bars', match: b=> b.id.includes('bar') || b.id.includes('area') },
   { title: 'Distribución', id: 'charts-distribucion', match: b=> ['chart-donut','chart-scatter','chart-radar'].includes(b.id) },
   { title: 'Heatmaps', id: 'charts-heatmaps', match: b=> b.id.includes('heatmap') },
+  { title: 'Gauge', id: 'charts-gauge', match: b=> b.id.includes('gauge') },
 ]
 
 export default function ChartsBlocksPage(){
