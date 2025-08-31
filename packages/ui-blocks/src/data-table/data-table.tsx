@@ -242,7 +242,12 @@ export function DataTable<TData, TValue>({
     dragSourceIdRef.current = null
     initialLayoutRef.current = null
   lastPreviewTargetRef.current = null
-    if (!sourceId || sourceId === targetId) return
+    if (!sourceId) return
+    // Si soltamos sobre la misma celda origen pero había un preview distinto, usar ese destino
+    if(sourceId === targetId && lastPreviewTargetRef.current && lastPreviewTargetRef.current !== sourceId){
+      targetId = lastPreviewTargetRef.current
+    }
+    if (sourceId === targetId) return
   if(!isMountedRef.current) return
     setColumnOrder(prev => {
       const current = prev.length
@@ -316,8 +321,16 @@ export function DataTable<TData, TValue>({
                     <TableHead
                       key={header.id}
                       data-col-id={id}
-                      onDragOver={(e: React.DragEvent<HTMLTableCellElement>) => { if (enableColumnReorder && dragSourceIdRef.current){ e.preventDefault(); schedulePreview(id) } }}
-                      onDragEnter={(e: React.DragEvent<HTMLTableCellElement>)=>{ if(enableColumnReorder && dragSourceIdRef.current && e.currentTarget === e.target){ schedulePreview(id) } }}
+                      // DragOver: prevenimos default y programamos preview si cambia el target
+                      onDragOver={(e: React.DragEvent<HTMLTableCellElement>) => { 
+                        if (enableColumnReorder && dragSourceIdRef.current){ 
+                          e.preventDefault(); 
+                          if(dragSourceIdRef.current !== id && lastPreviewTargetRef.current !== id){
+                            schedulePreview(id)
+                          }
+                        } 
+                      }}
+                      onDragEnter={(e: React.DragEvent<HTMLTableCellElement>)=>{ if(enableColumnReorder && dragSourceIdRef.current && dragSourceIdRef.current !== id){ schedulePreview(id) } }}
                       onDrop={(e: React.DragEvent<HTMLTableCellElement>) => handleHeaderDrop(e, id)}
                       className={
                         canReorder ? 'relative select-none' : undefined
