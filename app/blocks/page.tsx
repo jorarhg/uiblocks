@@ -1,6 +1,8 @@
 "use client"
 import * as React from 'react'
+import { Suspense } from 'react'
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Database, Table as TableIcon, Filter, Code2, LayoutTemplate, Layers, ChevronRight, ExternalLink, MonitorSmartphone, Copy, Check } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,6 +23,7 @@ interface BlockMeta {
   tags?: string[]
   status?: 'stable' | 'beta' | 'soon'
   fullWidth?: boolean
+  payload?: any
 }
 
 const basicTableCode = `import { DataTable } from '@teribit/ui-blocks'
@@ -47,6 +50,14 @@ const treemapHeatData = [ { name: 'A', value: 40 }, { name: 'B', value: 25 }, { 
 const gridHeatX = ['L','M','X','J','V']
 const gridHeatY = ['1','2','3','4','5','6']
 const gridHeatData = gridHeatX.flatMap(x=> gridHeatY.map(y=> ({ x, y, value: Math.round(Math.random()*100) })))
+// Variante rectangular (más columnas que filas) para demostrar layout rectangular
+const gridHeatRectX = Array.from({ length: 12 }).map((_,i)=> `C${i+1}`)
+const gridHeatRectY = ['R1','R2','R3','R4','R5']
+const gridHeatRectData = gridHeatRectX.flatMap(x=> gridHeatRectY.map(y=> ({ x, y, value: Math.round(Math.random()*100) })))
+// Heatmap rectangular con celdas más anchas (valores visibles)
+const gridHeatRectWideX = Array.from({ length: 16 }).map((_,i)=> `C${i+1}`)
+const gridHeatRectWideY = ['R1','R2','R3','R4']
+const gridHeatRectWideData = gridHeatRectWideX.flatMap(x=> gridHeatRectWideY.map(y=> ({ x, y, value: Math.round(Math.random()*100) })))
 
 const blocks: BlockMeta[] = [
   {
@@ -71,7 +82,8 @@ const data = [ { category: 'Ene', value: 120 }, { category: 'Feb', value: 95 } ]
 <SimpleLineChart data={data} />`,
     tags: ['chart','line'],
     status: 'stable',
-    fullWidth: false
+  fullWidth: false,
+  payload: sampleLineData
   },
   {
     id: 'chart-line-multi',
@@ -84,7 +96,8 @@ const data = [ { category: 'Q1', serieA: 30, serieB: 42, serieC: 25 } ]
 <MultiLineChart data={data} series={['serieA','serieB','serieC']} />`,
     tags: ['chart','line','multi'],
     status: 'stable',
-    fullWidth: false
+  fullWidth: false,
+  payload: sampleMultiLine
   },
   {
     id: 'chart-line-reference',
@@ -96,7 +109,8 @@ const data = [ { category: 'Q1', serieA: 30, serieB: 42, serieC: 25 } ]
 <LineChartWithReference data={data} referenceY={80} />`,
     tags: ['chart','line','reference'],
     status: 'stable',
-    fullWidth: false
+  fullWidth: false,
+  payload: sampleLineData
   },
   {
     id: 'chart-bar-simple',
@@ -109,7 +123,8 @@ const data = [ { category: 'Ene', value: 42 } ]
 <SimpleBarChart data={data} />`,
     tags: ['chart','bar'],
     status: 'stable',
-    fullWidth: false
+  fullWidth: false,
+  payload: sampleLineData
   },
   {
     id: 'chart-bar-stacked',
@@ -122,7 +137,8 @@ const data = [ { category: 'S1', alpha: 12, beta: 20 } ]
 <StackedBarChart data={data} series={['alpha','beta']} />`,
     tags: ['chart','bar','stacked'],
     status: 'stable',
-    fullWidth: false
+  fullWidth: false,
+  payload: sampleStacked
   },
   {
     id: 'chart-area-simple',
@@ -135,7 +151,8 @@ const data = [ { category: 'Ene', value: 70 } ]
 <SimpleAreaChart data={data} />`,
     tags: ['chart','area'],
     status: 'stable',
-    fullWidth: false
+  fullWidth: false,
+  payload: sampleLineData
   },
   {
     id: 'chart-donut',
@@ -148,7 +165,8 @@ const data = [ { name: 'A', value: 30 }, { name: 'B', value: 25 } ]
 <DonutChart data={data} />`,
     tags: ['chart','donut','pie'],
     status: 'beta',
-    fullWidth: false
+  fullWidth: false,
+  payload: donutData
   },
   {
     id: 'chart-scatter',
@@ -161,7 +179,8 @@ const data = [ { x: 10, y: 20, category: 'Grupo A' } ]
 <ScatterPointsChart data={data} />`,
     tags: ['chart','scatter'],
     status: 'beta',
-    fullWidth: false
+  fullWidth: false,
+  payload: scatterData
   },
   {
     id: 'chart-radar',
@@ -174,7 +193,8 @@ const data = [ { subject:'Q1', serieA:30, serieB:15 } ]
 <SimpleRadarChart data={data} series={['serieA','serieB']} />`,
     tags: ['chart','radar'],
     status: 'beta',
-    fullWidth: false
+  fullWidth: false,
+  payload: radarData
   },
   {
     id: 'chart-heatmap-treemap',
@@ -187,7 +207,8 @@ const data = [ { name:'A', value:40 }, { name:'B', value:25 } ]
 <SimpleHeatmap data={data} />`,
     tags: ['chart','heatmap','treemap'],
     status: 'beta',
-    fullWidth: false
+  fullWidth: false,
+  payload: treemapHeatData
   },
   {
     id: 'chart-heatmap-grid',
@@ -200,7 +221,40 @@ const data = [ { x:'L', y:'1', value:12 } ]
 <HeatmapChart data={data} />`,
     tags: ['chart','heatmap','grid'],
     status: 'beta',
-    fullWidth: false
+  fullWidth: false,
+  payload: gridHeatData
+  },
+  {
+    id: 'chart-heatmap-grid-rect',
+    title: 'Heatmap Grid Rect',
+    category: 'charts',
+    description: 'Heatmap rectangular con gap, ejes y sin valores en celdas.',
+    preview: <div className='rounded-md'><HeatmapChart data={gridHeatRectData} gap={0.18} showAxes showCellValues={false} /></div>,
+    code: `import { HeatmapChart } from '@teribit/ui-blocks'
+const xKeys = ['C1','C2','C3','C4','C5','C6']
+const yKeys = ['R1','R2','R3']
+const data = xKeys.flatMap(x=> yKeys.map(y=> ({ x, y, value: Math.round(Math.random()*100) })))
+<HeatmapChart data={data} gap={0.18} showAxes showCellValues={false} />`,
+    tags: ['chart','heatmap','grid','rect'],
+    status: 'beta',
+  fullWidth: false,
+  payload: gridHeatRectData
+  },
+  {
+    id: 'chart-heatmap-grid-rect-values',
+    title: 'Heatmap Grid Rect Valores',
+    category: 'charts',
+    description: 'Heatmap rectangular con celdas rectangulares y valores visibles.',
+    preview: <div className='rounded-md'><HeatmapChart data={gridHeatRectWideData} height={180} gap={0.12} showAxes showCellValues /></div>,
+    code: `import { HeatmapChart } from '@teribit/ui-blocks'
+const xKeys = Array.from({length:16}).map((_,i)=> 'C'+(i+1))
+const yKeys = ['R1','R2','R3','R4']
+const data = xKeys.flatMap(x=> yKeys.map(y=> ({ x, y, value: Math.round(Math.random()*100) })))
+<HeatmapChart data={data} height={180} gap={0.12} showAxes showCellValues />`,
+    tags: ['chart','heatmap','grid','rect','values'],
+    status: 'beta',
+  fullWidth: false,
+  payload: gridHeatRectWideData
   },
   {
     id: 'datatable-filters',
@@ -332,9 +386,37 @@ const categoryGroups: CategoryGroup[] = [
 const flatCategories: CategoryItem[] = [ { key: 'all', label: 'Todos', icon: Layers }, ...categoryGroups.flatMap(g=>g.items) ]
 
 export default function BlocksPage(){
-  const [category, setCategory] = React.useState('tables')
-  const filtered = blocks.filter(b=> category==='all' || b.category===category)
-  const activeCat = flatCategories.find(c=>c.key===category)
+  return (
+    <Suspense fallback={<div className="p-8 text-sm text-muted-foreground">Cargando bloques…</div>}>
+      <BlocksPageContent />
+    </Suspense>
+  )
+}
+
+function BlocksPageContent(){
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const sp = searchParams?.get('cat') || ''
+  const initialCat = flatCategories.some(c=> c.key===sp) ? sp : 'tables'
+  const [category, setCategory] = React.useState(initialCat)
+
+  const updateCategory = React.useCallback((next:string)=>{
+    setCategory(next)
+    // sync URL
+    const params = new URLSearchParams(window.location.search)
+    if(next==='tables') params.delete('cat')
+    else params.set('cat', next)
+    const qs = params.toString()
+    router.replace(qs?`?${qs}`:'?', { scroll:false })
+  }, [router])
+
+  React.useEffect(()=>{
+    const current = searchParams?.get('cat') || ''
+    if(current && current !== category && flatCategories.some(c=>c.key===current)) setCategory(current)
+  }, [searchParams, category])
+
+  const filtered = React.useMemo(()=> blocks.filter(b=> category==='all' || b.category===category), [category])
+  const activeCat = React.useMemo(()=> flatCategories.find(c=>c.key===category), [category])
 
   return (
     <div className="py-6 md:py-10">
@@ -353,7 +435,7 @@ export default function BlocksPage(){
                       return (
                         <li key={item.key}>
                           <button
-                            onClick={()=>setCategory(item.key)}
+                            onClick={()=>updateCategory(item.key)}
                             className={`relative group w-full flex items-center gap-2 rounded-md pl-4 pr-3 py-2 text-sm text-left transition-colors ${active? 'bg-muted text-foreground':'hover:bg-accent'} overflow-hidden`}
                           >
                             {/* Indicador lateral */}
@@ -376,7 +458,7 @@ export default function BlocksPage(){
         <main className="flex-1 min-w-0">
           {/* Breadcrumb */}
           <div className="hidden md:flex items-center gap-1 text-xs text-muted-foreground mb-4">
-            <button onClick={()=>setCategory('all')} className="hover:text-foreground transition">Blocks</button>
+            <button onClick={()=>updateCategory('all')} className="hover:text-foreground transition">Blocks</button>
             <ChevronRight className="h-3 w-3" />
             <span className="text-foreground font-medium">{category==='all'? 'Overview': activeCat?.label}</span>
           </div>
@@ -461,6 +543,9 @@ function BlockCard({ block }: { block: BlockMeta }){
           <TabsList className='mb-2 w-fit self-start justify-start'>
             <TabsTrigger value='preview'>Preview</TabsTrigger>
             <TabsTrigger value='code'><Code2 className='h-4 w-4 mr-1' />Code</TabsTrigger>
+            {block.category==='charts' && block.payload && (
+              <TabsTrigger value='payload'>Payload</TabsTrigger>
+            )}
           </TabsList>
           <TabsContent value='preview' className='flex-1 m-0 rounded-md border bg-background p-5 overflow-auto' style={{ minHeight }}>
             <div ref={previewRef} className='relative h-full' aria-label={`Vista previa: ${block.title}`} role='group'>{block.preview}</div>
@@ -468,13 +553,18 @@ function BlockCard({ block }: { block: BlockMeta }){
           <TabsContent value='code' className='flex-1 m-0 rounded-md border bg-black/95 p-0 overflow-hidden' style={{ minHeight }}>
             <CodeBlock code={block.code} minHeight={minHeight} />
           </TabsContent>
+          {block.category==='charts' && block.payload && (
+            <TabsContent value='payload' className='flex-1 m-0 rounded-md border bg-black/95 p-0 overflow-hidden' style={{ minHeight }}>
+              <CodeBlock code={JSON.stringify(block.payload, null, 2)} minHeight={minHeight} lang='json' />
+            </TabsContent>
+          )}
         </Tabs>
       </CardContent>
     </Card>
   )
 }
 
-function CodeBlock({ code, minHeight }: { code:string; minHeight?: number }){
+function CodeBlock({ code, minHeight, lang }: { code:string; minHeight?: number; lang?: string }){
   const [html, setHtml] = React.useState<string | null>(null)
   const [copied, setCopied] = React.useState(false)
   React.useEffect(()=>{
@@ -482,12 +572,12 @@ function CodeBlock({ code, minHeight }: { code:string; minHeight?: number }){
     ;(async()=>{
       try {
         const { codeToHtml } = await import('shiki')
-        const out = await codeToHtml(code, { lang: detectLang(code), theme: 'github-dark' })
+    const out = await codeToHtml(code, { lang: lang || detectLang(code), theme: 'github-dark' })
         if(mounted) setHtml(out)
       } catch (e){ if(mounted) setHtml('') }
     })()
     return ()=>{ mounted = false }
-  }, [code])
+  }, [code, lang])
 
   function handleCopy(){
     navigator.clipboard.writeText(code).then(()=>{

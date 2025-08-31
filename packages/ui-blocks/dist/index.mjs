@@ -1722,23 +1722,45 @@ const SimpleHeatmap = ({ data, height = 300, className }) => {
   }, {});
   return /* @__PURE__ */ jsx(ChartContainer, { config, className: cn("w-full", className), style: { height }, children: /* @__PURE__ */ jsx(Treemap, { data: data.map((d, i) => ({ ...d, fill: d.fill || chartColor(i) })), dataKey: "value", stroke: "var(--background)", fill: "transparent" }) });
 };
-const HeatmapChart = ({ data, xKeys, yKeys, height = 320, className, colors = { from: chartColor(0).replace(/\)$/, " / 0.15)"), to: chartColor(0) }, valueFormatter, gap = 0, showCellValues = true, showAxes = false }) => {
+const HeatmapChart = ({ data, xKeys, yKeys, height = 320, width, className, colors, baseColor, colorStops, valueFormatter, gap = 0, showCellValues = true, showAxes = false, title }) => {
   const [hover, setHover] = React__default.useState(null);
   const xs = xKeys || Array.from(new Set(data.map((d) => d.x)));
   const ys = yKeys || Array.from(new Set(data.map((d) => d.y)));
   const max = Math.max(...data.map((d) => d.value)) || 1;
   const min = Math.min(...data.map((d) => d.value)) || 0;
   const cfg = { value: { label: "Valor", color: "hsl(var(--primary))" } };
-  function cellColor(v) {
-    if (max === min) return colors.to;
-    const ratio = (v - min) / (max - min);
-    if (colors.to.startsWith("hsl(") && colors.from.includes("/")) {
-      const base = colors.to.replace(/\)$/, "");
-      return base + ` / ${0.15 + ratio * 0.85})`;
-    }
-    return colors.to;
+  let scheme = null;
+  if (colorStops && colorStops.length >= 2) scheme = colorStops;
+  else if (baseColor) {
+    const alphaFrom = baseColor.startsWith("hsl(") ? baseColor.replace(/\)$/, " / 0.15)") : baseColor + "26";
+    scheme = [alphaFrom, baseColor];
   }
-  return /* @__PURE__ */ jsx(ChartContainer, { config: cfg, className: cn("w-full", className), style: { height }, children: /* @__PURE__ */ jsxs(
+  const finalColors = colors || (scheme ? { from: scheme[0], to: scheme[scheme.length - 1] } : { from: chartColor(0).replace(/\)$/, " / 0.15)"), to: chartColor(0) });
+  if (!scheme) scheme = [finalColors.from, finalColors.to];
+  function interpColor(stopA, stopB, t) {
+    return t < 0.5 ? stopA : stopB;
+  }
+  function cellColor(v) {
+    if (max === min) return scheme[scheme.length - 1];
+    const ratio = (v - min) / (max - min);
+    if (scheme.length === 2) {
+      const [from, to] = scheme;
+      if (to.startsWith("hsl(") && from.includes("/")) {
+        const base = to.replace(/\)$/, "");
+        return base + ` / ${0.15 + ratio * 0.85})`;
+      }
+      return ratio < 0.5 ? from : to;
+    }
+    const seg = 1 / (scheme.length - 1);
+    const idx = Math.min(scheme.length - 2, Math.floor(ratio / seg));
+    const localT = (ratio - idx * seg) / seg;
+    return interpColor(scheme[idx], scheme[idx + 1], localT);
+  }
+  const mLeft = showAxes ? 1.2 : 0;
+  const mBottom = showAxes ? 1 : 0;
+  const totalW = xs.length + mLeft;
+  const totalH = ys.length + mBottom;
+  return /* @__PURE__ */ jsx(ChartContainer, { config: cfg, className: cn("w-full", className), style: { height, width }, "aria-label": title || "Heatmap chart", children: /* @__PURE__ */ jsxs(
     "div",
     {
       className: "relative w-full h-full flex items-center justify-center p-4 overflow-hidden",
@@ -1748,9 +1770,14 @@ const HeatmapChart = ({ data, xKeys, yKeys, height = 320, className, colors = { 
         const bounds = container.getBoundingClientRect();
         const relX = e.clientX - bounds.left;
         const relY = e.clientY - bounds.top;
-        const cw = bounds.width / xs.length;
-        const ch = bounds.height / ys.length;
-        const xi = Math.floor(relX / cw), yi = Math.floor(relY / ch);
+        const cw = bounds.width / totalW;
+        const ch = bounds.height / totalH;
+        if (relX < mLeft * cw || relY > ys.length * ch) {
+          setHover(null);
+          return;
+        }
+        const xi = Math.floor((relX - mLeft * cw) / cw);
+        const yi = Math.floor(relY / ch);
         if (xi < 0 || xi >= xs.length || yi < 0 || yi >= ys.length) {
           setHover(null);
           return;
@@ -1761,33 +1788,32 @@ const HeatmapChart = ({ data, xKeys, yKeys, height = 320, className, colors = { 
           setHover(null);
           return;
         }
-        setHover({ x, y, value: cell.value, cx: (xi + 0.5) * cw, cy: (yi + 0.5) * ch });
+        setHover({ x, y, value: cell.value, cx: (mLeft + xi + 0.5) * cw, cy: (yi + 0.5) * ch });
       },
       children: [
-        /* @__PURE__ */ jsx("svg", { width: "100%", height: "100%", preserveAspectRatio: "xMidYMid meet", viewBox: `0 0 ${xs.length} ${ys.length}`, children: ys.map((y, yi) => /* @__PURE__ */ jsx("g", { children: xs.map((x, xi) => {
-          var _a;
-          const cell = data.find((d) => d.x === x && d.y === y);
-          const v = (_a = cell == null ? void 0 : cell.value) != null ? _a : 0;
-          const isActive = hover && hover.x === x && hover.y === y;
-          const g = Math.min(Math.max(gap, 0), 0.9);
-          const off = g / 2;
-          const size = 1 - g;
-          return /* @__PURE__ */ jsx("rect", { x: xi + off, y: yi + off, width: size, height: size, fill: cellColor(v), rx: 0.12, stroke: isActive ? "hsl(var(--foreground))" : "none", strokeWidth: isActive ? 0.04 : 0 }, `${x}-${y}`);
-        }) }, `row-${y}`)) }),
-        showCellValues && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 grid", style: { gridTemplateColumns: `repeat(${xs.length}, 1fr)`, gridTemplateRows: `repeat(${ys.length}, 1fr)` }, children: ys.map((y, yi) => /* @__PURE__ */ jsx(React__default.Fragment, { children: xs.map((x, xi) => {
-          var _a;
-          const cell = data.find((d) => d.x === x && d.y === y);
-          const v = (_a = cell == null ? void 0 : cell.value) != null ? _a : 0;
-          return /* @__PURE__ */ jsx("div", { className: "flex items-center justify-center text-[10px] font-medium text-foreground/70", children: valueFormatter ? valueFormatter(v) : v }, `label-${x}-${y}`);
-        }) }, `labels-row-${y}`)) }),
-        showAxes && /* @__PURE__ */ jsxs(Fragment, { children: [
-          /* @__PURE__ */ jsx("div", { className: "absolute left-0 right-0 bottom-0 translate-y-full mt-2 grid text-[10px] font-medium text-muted-foreground", style: { gridTemplateColumns: `repeat(${xs.length}, 1fr)` }, "aria-label": "Eje X", children: xs.map((x) => /* @__PURE__ */ jsx("div", { className: "text-center truncate px-1", children: String(x) }, `x-${x}`)) }),
-          /* @__PURE__ */ jsx("div", { className: "absolute top-0 bottom-0 -translate-x-full mr-2 flex flex-col justify-center gap-1", "aria-label": "Eje Y", children: ys.map((y) => /* @__PURE__ */ jsx("div", { className: "text-[10px] font-medium text-muted-foreground h-full flex items-center justify-end pr-1", style: { height: `calc(100% / ${ys.length})` }, children: String(y) }, `y-${y}`)) })
-        ] }),
-        /* @__PURE__ */ jsxs("div", { className: "absolute top-1 left-1 flex gap-2 text-[10px] text-muted-foreground", children: [
-          /* @__PURE__ */ jsx("span", { children: min }),
-          /* @__PURE__ */ jsx("span", { className: "bg-border/40 h-px w-8 self-center" }),
-          /* @__PURE__ */ jsx("span", { children: max })
+        /* @__PURE__ */ jsxs("svg", { width: "100%", height: "100%", preserveAspectRatio: "xMidYMid meet", viewBox: `0 0 ${totalW} ${totalH}`, children: [
+          title && /* @__PURE__ */ jsx("text", { x: mLeft, y: -0.6, fontSize: 0.45, fill: "hsl(var(--muted-foreground))", textAnchor: "start", children: title }),
+          /* @__PURE__ */ jsx("g", { className: "cells", children: ys.map((y, yi) => xs.map((x, xi) => {
+            var _a;
+            const cell = data.find((d) => d.x === x && d.y === y);
+            const v = (_a = cell == null ? void 0 : cell.value) != null ? _a : 0;
+            const g = Math.min(Math.max(gap, 0), 0.9);
+            const off = g / 2;
+            const size = 1 - g;
+            const isActive = hover && hover.x === x && hover.y === y;
+            return /* @__PURE__ */ jsxs("g", { children: [
+              /* @__PURE__ */ jsx("rect", { x: mLeft + xi + off, y: yi + off, width: size, height: size, rx: 0.12, fill: cellColor(v), stroke: isActive ? "hsl(var(--foreground))" : "none", strokeWidth: isActive ? 0.04 : 0 }),
+              showCellValues && /* @__PURE__ */ jsx("text", { x: mLeft + xi + 0.5, y: yi + 0.5, textAnchor: "middle", dominantBaseline: "middle", fontSize: 0.28, fill: "hsl(var(--foreground) / 0.7)", children: valueFormatter ? valueFormatter(v) : v })
+            ] }, `${x}-${y}`);
+          })) }),
+          showAxes && /* @__PURE__ */ jsxs("g", { className: "axes", fontSize: 0.3, fill: "hsl(var(--muted-foreground))", children: [
+            ys.map((y, yi) => /* @__PURE__ */ jsx("text", { x: mLeft - 0.25, y: yi + 0.5, textAnchor: "end", dominantBaseline: "middle", children: String(y) }, `y-${y}`)),
+            xs.map((x, xi) => /* @__PURE__ */ jsx("text", { x: mLeft + xi + 0.5, y: ys.length + 0.55, textAnchor: "middle", dominantBaseline: "middle", children: String(x) }, `x-${x}`))
+          ] }),
+          /* @__PURE__ */ jsxs("g", { fontSize: 0.3, fill: "hsl(var(--muted-foreground))", children: [
+            /* @__PURE__ */ jsx("text", { x: 0, y: title ? -0.15 : -0.4, children: min }),
+            /* @__PURE__ */ jsx("text", { x: mLeft + xs.length - 1, y: title ? -0.15 : -0.4, textAnchor: "end", children: max })
+          ] })
         ] }),
         hover && /* @__PURE__ */ jsxs("div", { className: "pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-md border bg-popover px-2 py-1 text-[10px] shadow-md", style: { left: hover.cx, top: hover.cy }, children: [
           /* @__PURE__ */ jsx("div", { className: "font-medium", children: valueFormatter ? valueFormatter(hover.value) : hover.value }),
