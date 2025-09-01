@@ -1,5 +1,11 @@
 # UI Blocks (`@teribit/ui-blocks`)
 
+![version](https://img.shields.io/badge/version-0.1.0-blue.svg)
+![license](https://img.shields.io/badge/license-MIT-green.svg)
+![status](https://img.shields.io/badge/status-alpha-orange.svg)
+<!-- Reemplazar bundle size badge tras publicar en npm -->
+![bundle size](https://img.shields.io/badge/bundle--size-pending-lightgrey.svg)
+
 Colección modular de bloques de interfaz (tablas, tabs colapsables, charts, toolbar dinámica) para acelerar dashboards y aplicaciones internas. Construido con React 19, TypeScript, Radix Primitives y Tailwind.
 
 ## 🚀 Características principales
@@ -250,3 +256,17 @@ Este proyecto está bajo la licencia MIT. Ver el archivo `LICENSE` para más det
 ---
 
 Construido con ❤️ para acelerar dashboards productivos.
+
+## 🗺️ Roadmap (short term)
+
+- [ ] Persistencia local de preferencias (orden / visibilidad de columnas)
+- [ ] Virtualización (react-virtual) para datasets grandes
+- [ ] Filtro avanzado (builder: AND/OR, rangos, date presets)
+- [ ] Export (CSV / XLSX) desde DataTable
+- [ ] Tokens de tema (dark auto + escalas semantic) y docs theming
+- [ ] API onCollapseChange para `CollapsibleSidebarTabs`
+- [ ] Charts: área apilada + streaming live demo
+- [ ] Paquete de iconos interno optimizado (tree‑shake)
+- [ ] Infra CI: release semántico + changelog automático
+
+Sugerencias o prioridades distintas: abrir issue / discusión.
