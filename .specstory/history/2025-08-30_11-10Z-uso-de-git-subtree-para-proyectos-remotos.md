@@ -5182,7 +5182,112 @@ en los bloques, en la parte de las datatables, no tenemos modo de personalizar l
 
 _**Assistant**_
 
-Reviso implementación actual de DataTable y fábricas de columnas para entender cómo agregar configuración de cabeceras. 
+Reviso implementación actual de DataTable y fábricas de columnas para entender cómo agregar configuración de cabeceras. Voy a leer la página de documentación de DataTable para insertar un ejemplo del nuevo modo simple. Voy a agregar soporte de configuración simple de columnas al componente DataTable y documentar su uso. 
+```
+
+```
+Voy a actualizar la documentación para incluir el modo simple con simpleColumns. 
+```
+
+```
+Reintento commit escapando la ruta con paréntesis usando comillas o git add por separado. Implementado soporte de cabeceras declarativas:
+
+- Nueva prop optional `simpleColumns` en `DataTable` para definir columnas con objetos: key, label, sortable, hideable, accessor, render.
+- Generación automática de ColumnDef cuando no se pasan `columns`.
+- Ajuste de búsqueda para usar primera key si no se provee `searchKey`.
+- Actualizada documentación con sección “Modo simple (config de cabeceras)”.
+- Commit: feat(data-table): soporte simpleColumns para configurar cabeceras declarativas.
+
+Listo para extender (futuros flags: filterable, width, alignment). ¿Añadimos esas opciones u otra mejora?
+
+---
+
+_**User**_
+
+Listo para extender (futuros flags: filterable, width, alignment). Añadimos esas opciones u otra mejora
+
+---
+
+_**Assistant**_
+
+Reviso implementación de componentes de tabla para aplicar alineación y estilos de ancho. Voy a extender simpleColumns con flags: filterable, width, align y documentación mínima. 
+```
+
+```
+Actualizo documentación del modo simple para mostrar nuevos flags (filterable, width, align). 
+```
+
+```
+Reintento add con ruta con paréntesis entre comillas. Añadidas extensiones a simpleColumns:
+
+- Nuevos flags: filterable (búsqueda includes por columna), width, align (left|center|right).
+- Soporte de meta para aplicar estilo y alineación en <th>/<td>.
+- Ejemplo de docs actualizado mostrando uso de width, align y filterable.
+- Commit: feat(data-table): extensiones simpleColumns (filterable, width, align)
+
+Siguientes mejoras opcionales sugeridas:
+1. column: { truncate?: boolean } para aplicar ellipsis.
+2. Soporte de headerTooltip para mostrar descripción en hover.
+3. Tipado generics helper: createSimpleColumns<User>() para mejor inferencia.
+4. Filtro por tipo (enum / boolean) automático según datos.
+5. Persistencia de visibilidad/orden en localStorage.
+
+Indica si implementamos alguno ahora.
+
+---
+
+_**User**_
+
+en el ejemplo de reordenar columnas hay un bug, cuando arrastras el encabezado a una columna destino, el header de la columna destino se mueve ala del origen y luego se regresa y se repite infinitamente
+
+---
+
+_**Assistant**_
+
+Busco referencias a reordenamiento de columnas para ubicar el ejemplo con bug. Corregir handler de dragover para evitar reprogramar preview continuamente y causar rebote visual. 
+```
+
+```
+
+```
+
+```
+
+
+---
+
+_**User**_
+
+el bug se corrigio pero ahora hay otro bug, cuando arrastras la cabecera a otra cabecera, solo si ubicas el centro y liberar el drag es que sucede el reordenamiento de la columna pero si liberas en las orillas pero dentro de la celda del header no sucede, la columna no se reordena y la etiqueta del header regresa a su lugar
+
+---
+
+_**Assistant**_
+
+Voy a ajustar el manejo de dragOver para programar preview en toda el área de la celda y usar el último preview como destino en caso necesario. 
+```
+
+```
+Bug ajustado:
+
+- Ahora se programa preview también en dragOver (con guard para no spamear).
+- En drop, si sueltas sobre la misma cabecera origen pero existía un preview distinto, se usa ese destino (reordena).
+- Se amplía efectivamente el área válida de drop a toda la celda; ya no necesitas el centro exacto.
+- Commit: fix(data-table-reorder): mejora área de drop y usa preview final para reordenar.
+
+Verifica si la interacción se siente fluida; si persiste algún borde raro podemos añadir umbral de distancia o highlight visual. ¿Algún ajuste extra?
+
+---
+
+_**User**_
+
+has una compilacion para distribucion ya que voy a subir el proyecto al repo
+
+---
+
+_**Assistant**_
+
+Reviso scripts y configuración de build para preparar la compilación de distribución. 
 
 ---
 
