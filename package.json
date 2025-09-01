@@ -1,6 +1,6 @@
 {
   "name": "@teribit/ui-blocks",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "Colección modular de UI Blocks reutilizables (Data Table + futuros bloques)",
   "private": false,
   "main": "dist/index.cjs.js",

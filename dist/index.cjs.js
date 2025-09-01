@@ -1244,7 +1244,11 @@ function DataTable({
     dragSourceIdRef.current = null;
     initialLayoutRef.current = null;
     lastPreviewTargetRef.current = null;
-    if (!sourceId || sourceId === targetId) return;
+    if (!sourceId) return;
+    if (sourceId === targetId && lastPreviewTargetRef.current && lastPreviewTargetRef.current !== sourceId) {
+      targetId = lastPreviewTargetRef.current;
+    }
+    if (sourceId === targetId) return;
     if (!isMountedRef.current) return;
     setColumnOrder((prev) => {
       const current = prev.length ? prev : table.getAllLeafColumns().map((c) => c.id);
@@ -1315,11 +1319,13 @@ function DataTable({
             onDragOver: (e) => {
               if (enableColumnReorder && dragSourceIdRef.current) {
                 e.preventDefault();
-                schedulePreview(id);
+                if (dragSourceIdRef.current !== id && lastPreviewTargetRef.current !== id) {
+                  schedulePreview(id);
+                }
               }
             },
             onDragEnter: (e) => {
-              if (enableColumnReorder && dragSourceIdRef.current && e.currentTarget === e.target) {
+              if (enableColumnReorder && dragSourceIdRef.current && dragSourceIdRef.current !== id) {
                 schedulePreview(id);
               }
             },
