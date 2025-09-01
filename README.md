@@ -30,6 +30,70 @@ npm install @teribit/ui-blocks @tanstack/react-table lucide-react class-variance
 
 Configura Tailwind y Radix (ver docs internas si partes de cero).
 
+## 🔗 Integración vía `git subtree`
+
+Si prefieres traer el paquete (o todo el repo) dentro de otro mono‑repo sin publicar aún en npm, puedes usar `git subtree`. Esto evita hacks con submódulos y mantiene un historial aplanado.
+
+### Opción 1: Todo el repositorio como subtree
+
+```bash
+# Dentro de tu repo destino
+git remote add uiblocks https://github.com/jorarhg/uiblocks.git
+git fetch uiblocks
+git subtree add --prefix=vendor/uiblocks uiblocks main --squash
+```
+
+Actualizar más adelante:
+
+```bash
+git fetch uiblocks
+git subtree pull --prefix=vendor/uiblocks uiblocks main --squash
+```
+
+### Opción 2: Sólo el paquete `packages/ui-blocks`
+
+Para evitar traer docs y sitio demo, se puede mantener (en este repo origen) una rama split que contenga únicamente el directorio `packages/ui-blocks`.
+
+En el repo de UI Blocks (mantenedor):
+
+```bash
+# Crear / actualizar rama split (ejecutar tras cambios relevantes)
+git subtree split --prefix packages/ui-blocks -b split/ui-blocks
+git push origin split/ui-blocks:split/ui-blocks
+```
+
+En el repo consumidor:
+
+```bash
+git remote add uiblocks https://github.com/jorarhg/uiblocks.git
+git fetch uiblocks split/ui-blocks
+git subtree add --prefix=libs/ui-blocks uiblocks split/ui-blocks --squash
+```
+
+Actualizar luego:
+
+```bash
+git fetch uiblocks split/ui-blocks
+git subtree pull --prefix=libs/ui-blocks uiblocks split/ui-blocks --squash
+```
+
+### Convenciones sugeridas
+
+- Usa `--squash` para mantener un historial compacto en el repo consumidor.
+- Prefijos comunes: `vendor/`, `libs/` o `external/`.
+- Documenta en tu README interno el origen y comandos de actualización.
+- Si haces cambios locales que quieras devolver, crea un branch y abre PR aquí en lugar de `subtree push` inicialmente (evita divergencias tempranas).
+
+### Problemas frecuentes
+
+| Situación | Causa | Solución rápida |
+|-----------|-------|-----------------|
+| Conflictos al `pull` | Cambios locales en mismo archivo | Haz commit local, luego `git subtree pull ... --squash`; resuelve y commit |
+| Historia demasiado grande | Añadiste todo el repo y sólo quieres el paquete | Migra a Opción 2 usando rama split |
+| Cambios no reflejados | Olvidaste regenerar rama split | Ejecuta nuevamente `git subtree split ...` y `push` |
+
+Si se publica el paquete en npm, podrás reemplazar el subtree por la dependencia directa y borrar la carpeta vendorizada.
+
 ## 🏃‍♂️ Quick Start
 
 ### 1. (Opcional) Define tu tipo de dato
