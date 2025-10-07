@@ -902,6 +902,18 @@ const FORMATTERS = {
   link: LinkFormatter,
   image: ImageFormatter
 };
+function registerFormatter(type, formatter) {
+  if (FORMATTERS[type]) {
+    console.warn(`Formatter '${type}' ya existe y ser\xE1 sobrescrito`);
+  }
+  FORMATTERS[type] = formatter;
+}
+function hasFormatter(type) {
+  return type in FORMATTERS;
+}
+function getFormatter(type) {
+  return FORMATTERS[type];
+}
 function formatCell(context) {
   const { field } = context;
   if (!field.formatter) return DefaultFormatter(context);
@@ -1978,4 +1990,7 @@ exports.createCustomFormatter = createCustomFormatter;
 exports.defaultActions = defaultActions;
 exports.defaultActionsColumnConfig = defaultActionsColumnConfig;
 exports.formatCell = formatCell;
+exports.getFormatter = getFormatter;
+exports.hasFormatter = hasFormatter;
+exports.registerFormatter = registerFormatter;
 //# sourceMappingURL=index.cjs.js.map

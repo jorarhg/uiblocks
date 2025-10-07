@@ -877,6 +877,18 @@ const FORMATTERS = {
   link: LinkFormatter,
   image: ImageFormatter
 };
+function registerFormatter(type, formatter) {
+  if (FORMATTERS[type]) {
+    console.warn(`Formatter '${type}' ya existe y ser\xE1 sobrescrito`);
+  }
+  FORMATTERS[type] = formatter;
+}
+function hasFormatter(type) {
+  return type in FORMATTERS;
+}
+function getFormatter(type) {
+  return FORMATTERS[type];
+}
 function formatCell(context) {
   const { field } = context;
   if (!field.formatter) return DefaultFormatter(context);
@@ -1866,5 +1878,5 @@ const GaugeChart = ({
   ] });
 };
 
-export { ActionsMenu, Badge, BaseBarChart, BaseLineChart, Button, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandPaletteExample, CommandSeparator, CommandShortcut, DataTable, DataTableFacetedFilter, DataTablePagination, DataTableToolbar, DataTableViewOptions, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DonutChart, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, FORMATTERS, GaugeChart, HeatmapChart, Input, LineChartWithReference, MultiLineChart, Popover, PopoverContent, PopoverTrigger, ScatterPointsChart, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue, Separator, SimpleAreaChart, SimpleBarChart, SimpleHeatmap, SimpleLineChart, SimpleRadarChart, StackedBarChart, Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, applyTemplate, badgeVariants, buttonVariants, createActionsColumn, createCustomFormatter, defaultActions, defaultActionsColumnConfig, formatCell };
+export { ActionsMenu, Badge, BaseBarChart, BaseLineChart, Button, Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandPaletteExample, CommandSeparator, CommandShortcut, DataTable, DataTableFacetedFilter, DataTablePagination, DataTableToolbar, DataTableViewOptions, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger, DonutChart, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuPortal, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, FORMATTERS, GaugeChart, HeatmapChart, Input, LineChartWithReference, MultiLineChart, Popover, PopoverContent, PopoverTrigger, ScatterPointsChart, Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue, Separator, SimpleAreaChart, SimpleBarChart, SimpleHeatmap, SimpleLineChart, SimpleRadarChart, StackedBarChart, Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow, applyTemplate, badgeVariants, buttonVariants, createActionsColumn, createCustomFormatter, defaultActions, defaultActionsColumnConfig, formatCell, getFormatter, hasFormatter, registerFormatter };
 //# sourceMappingURL=index.mjs.map
