@@ -12,7 +12,11 @@ import { LinkFormatter } from './types/link-formatter'
 import { ImageFormatter } from './types/image-formatter'
 import { applyConditionalFormatting, applyTemplate, createCustomFormatter } from './helpers'
 
-export const FORMATTERS: Record<FormatterType, FormatterFunction> = {
+/**
+ * Registry mutable de formatters.
+ * Puedes extenderlo con formatters personalizados usando registerFormatter()
+ */
+export const FORMATTERS: Record<string, FormatterFunction> = {
   default: DefaultFormatter,
   badge: BadgeFormatter,
   date: DateFormatter,
@@ -24,6 +28,44 @@ export const FORMATTERS: Record<FormatterType, FormatterFunction> = {
   html: HtmlFormatter,
   link: LinkFormatter,
   image: ImageFormatter,
+}
+
+/**
+ * Registra un formatter personalizado en el registry global.
+ * 
+ * @example
+ * ```typescript
+ * import { registerFormatter, type FormatterFunction } from '@teribit/ui-blocks'
+ * 
+ * const myCustomFormatter: FormatterFunction = (context) => ({
+ *   content: <span className="custom">{context.value}</span>
+ * })
+ * 
+ * registerFormatter('my-custom', myCustomFormatter)
+ * 
+ * // Ahora puedes usarlo en tus columnas:
+ * { formatter: { type: 'my-custom' } }
+ * ```
+ */
+export function registerFormatter(type: string, formatter: FormatterFunction): void {
+  if (FORMATTERS[type]) {
+    console.warn(`Formatter '${type}' ya existe y será sobrescrito`)
+  }
+  FORMATTERS[type] = formatter
+}
+
+/**
+ * Verifica si un formatter está registrado
+ */
+export function hasFormatter(type: string): boolean {
+  return type in FORMATTERS
+}
+
+/**
+ * Obtiene un formatter del registry (útil para composición)
+ */
+export function getFormatter(type: string): FormatterFunction | undefined {
+  return FORMATTERS[type]
 }
 
 export function formatCell(context: FormatterContext): FormatterResult {

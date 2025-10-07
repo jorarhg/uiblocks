@@ -14,7 +14,14 @@
   },
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "tailwind.config.reference.js",
+    "postcss.config.reference.js",
+    "styles.reference.css",
+    "LICENSE",
+    "README.md",
+    "EXTENSIBILITY.md",
+    "SUBTREE_SETUP.md"
   ],
   "sideEffects": false,
   "scripts": {
